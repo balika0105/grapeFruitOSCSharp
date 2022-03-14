@@ -12,6 +12,8 @@ namespace GrapeFruitCSharp
 {
     public class Kernel : Sys.Kernel
     {
+        //Apparently some of my code is unreachable...
+#pragma warning disable CS0162
 
         //Creating the Virtual File System (handler) | DO NOT MOVE THIS LINE
         CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
@@ -22,18 +24,18 @@ namespace GrapeFruitCSharp
             Console.Write("\n\nPress a key to continue!");
             Console.ReadKey();
             #region Setup console
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            Encoding.RegisterProvider(Cosmos.System.ExtendedASCII.CosmosEncodingProvider.Instance);
             Console.Clear();
             #endregion
-            #region liveCD
+            #region Are we in a liveCD env?
             if (SystemVars.isLive)
-                {
-                    Console.WriteLine("Running in live CD mode");
-                }
-                else if (!SystemVars.isLive)
-                {
-                    Console.WriteLine("Running in normal mode");
-                }
+            {
+                Console.WriteLine("Running in live CD mode");
+            }
+            else if (!SystemVars.isLive)
+            {
+                Console.WriteLine("Running in normal mode");
+            }
             #endregion
 
             #region FS Init

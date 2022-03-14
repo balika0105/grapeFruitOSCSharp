@@ -9,10 +9,13 @@ using GrapeFruitCSharp.Codsie_Canvas;
 
 namespace GrapeFruitCSharp
 {
+    //Disabling annoying suggestions
+    #pragma warning disable IDE0059
+    #pragma warning disable IDE0090
     public class GraphicsTest
     {
-
-        static Canvas canvas;
+        static GrapeFruitCSharp.Codsie_Canvas.Canvas canvas;
+        static GrapeFruitCSharp.Codsie_Canvas.VBE vbe;
         public static void CallThisFromOutside()
         {
             Console.WriteLine("This is currently only in a testing phase");
@@ -23,20 +26,36 @@ namespace GrapeFruitCSharp
         }
         static void Init()
         {
-            VBE vbe = new VBE(1024, 768);
+            try
+            {
+                Console.Clear();
+                //Font currentFont = Font.Default;
+                vbe = new(1024, 768);
 
-            Font currentFont = new Font(Font.Default.Width, Font.Default.Height, Font.Default.MS.ToString());
-            canvas = new Canvas();
-            Canvas.Clear();
-            canvas.Update();
+                canvas = new();
+                Canvas.Clear();
+                canvas.Update();
+            }
+            catch (Exception ex)
+            {
+                ErrorScreen.Main(ex);
+            }
         }
 
         static void Main()
         {
-            Canvas.Clear(Color.DarkGreen);
-            Canvas.DrawString(10, 10, "Hello world", Color.White);
-            canvas.Update();
-            Console.ReadKey();
+            try
+            {
+                Canvas.Clear(Color.DarkGreen);
+                //Canvas.DrawString(10, 10, "Hello world", Color.White);
+                Canvas.DrawFilledTriangle(30, 40, 20, 30, 40, 30, Color.DarkRed);
+                canvas.Update();
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                ErrorScreen.Main(ex);
+            }
         }
     }
 }
