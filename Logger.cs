@@ -20,13 +20,13 @@ namespace GrapeFruit_CosmosDevKit
             {
                 case 2:
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("WARNING");
+                    Console.Write("WARN");
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
                 case 3:
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("ERROR");
+                    Console.Write("FAIL");
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
@@ -38,6 +38,10 @@ namespace GrapeFruit_CosmosDevKit
             }
             Console.Write("]\t");
             Console.WriteLine(message);
+        }
+        public static void Debug(string message)
+        {
+            Cosmos.System.Global.mDebugger.Send("[DEBUG]\t" + message);
         }
     }
 }

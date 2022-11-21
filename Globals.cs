@@ -29,7 +29,7 @@ namespace GrapeFruit_CosmosDevKit
 
         public static void printsysteminfo()
         {
-            Console.WriteLine("\n" + osname + " " + build);
+            Console.WriteLine(osname + " " + build);
             Console.WriteLine("Total memory: " + Cosmos.Core.GCImplementation.GetAvailableRAM() + "MB");
             Console.WriteLine("Used memory: " + Cosmos.Core.GCImplementation.GetUsedRAM() + " bytes");
         }

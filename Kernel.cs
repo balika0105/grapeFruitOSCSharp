@@ -14,8 +14,8 @@ namespace GrapeFruit_CosmosDevKit
     {
 
         protected override void BeforeRun()
-        {   
-            Sys.Global.mDebugger.Send("Grapefruit OS takes over here");
+        {
+            Logger.Debug("Grapefruit OS code begins here");
             //Extented ASCII
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             //Set screen size
@@ -64,8 +64,6 @@ namespace GrapeFruit_CosmosDevKit
             //}
             #endregion
 
-
-            Console.Clear();
             #region splash
             Console.WriteLine(@"   _____                      ______          _ _      ____   _____ ");
             Console.WriteLine(@"  / ____|                    |  ____|        (_) |    / __ \ / ____|");
@@ -125,10 +123,9 @@ namespace GrapeFruit_CosmosDevKit
             }
 
 
-            Console.Clear();
             //Print system data
             Globals.printsysteminfo();
-            Cosmos.System.Global.mDebugger.Send("Run() has our own things");
+            Logger.Debug("Calling Run()");
         }
 
         protected override void Run()

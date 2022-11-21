@@ -11,11 +11,9 @@ namespace GrapeFruit_CosmosDevKit
         //This class will have the proper user handling elements in future builds
         public static bool Login()
         {
-            Console.Write("\nLogin\nUsername for this session: ");
+            Console.Write("\nUsername for this session: ");
             Globals.currentuser = Console.ReadLine();
             return true;
-
-
         }
     }
 }

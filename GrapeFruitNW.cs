@@ -18,7 +18,7 @@ namespace GrapeFruit_CosmosDevKit
         public static void DHCPDiscovery()
         {
             var xClient = new DHCPClient();
-            if(xClient.SendDiscoverPacket() > -1)
+            if (xClient.SendDiscoverPacket() > -1)
                 Logger.Log(1, "IP Set with DHCP: " + NetworkConfiguration.CurrentAddress.ToString());
             else
                 Logger.Log(2, "Failed to set IP with DHCP");
@@ -27,71 +27,86 @@ namespace GrapeFruit_CosmosDevKit
 
         public static void ping(string address)
         {
-            Console.WriteLine("Pinging " + address);
-
-            Cosmos.System.Global.mDebugger.Send("Trying to split address to ping");
-
-            string[] address_ = address.Split('.');
-            byte[] realAddress = { };
-
-            Cosmos.System.Global.mDebugger.Send("Converting address to an array");
-            for (int i = 0; i < 4; i++)
-            {
-                realAddress[i] = byte.Parse(address_[i]);
-            }
+            Console.WriteLine("PING " + address);
+            byte successful = 0;
 
             using (var xClient = new ICMPClient())
             {
-                Cosmos.System.Global.mDebugger.Send("Setting frAddress");
-                Address frAddress = new Address(realAddress[0], realAddress[1], realAddress[2], realAddress[3]);
-                Cosmos.System.Global.mDebugger.Send("Trying to connect");
-                xClient.Connect(frAddress);
-
-                Cosmos.System.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(frAddress, 7);
+                EndPoint endPoint = new EndPoint(Address.Zero, 0);
+                xClient.Connect(Address.Parse(address));
 
                 for (int i = 0; i < 4; i++)
                 {
                     xClient.SendEcho();
                     int time = xClient.Receive(ref endPoint);
-                    Console.Write("\nReplied in " + time + "s");
+                    if (time >= 0)
+                    {
+                        Console.Write("Reply from " + address + ": icmp_seq=" + (i + 1) + " time=" + time);
+                        successful++;
+                    }
+                    else
+                    {
+                        Console.Write("Request timed out");
+                    }
+
+                    Console.Write("\n");
                 }
             }
+            Console.WriteLine("\n\n--- " + address + " ping statistics ---");
+            Console.WriteLine("4 packets transmitted, " + successful + " received, " + (4 - successful) + " lost");
         }
 
         static void ping(Address address)
         {
+            Console.WriteLine("PING " + address.ToString());
+            byte successful = 0;
+
             using (var xClient = new ICMPClient())
             {
-                
+                EndPoint endPoint = new EndPoint(Address.Zero, 0);
                 xClient.Connect(address);
-
-                Cosmos.System.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(address, 7);
 
                 for (int i = 0; i < 4; i++)
                 {
                     xClient.SendEcho();
                     int time = xClient.Receive(ref endPoint);
-                    Console.Write("\nReplied in " + time + "s");
+                    if (time >= 0)
+                    {
+                        Console.Write("Reply from " + address + ": icmp_seq=" + (i + 1) + " time=" + time);
+                        successful++;
+                    }
+                    else
+                    {
+                        Console.Write("Request timed out");
+                    }
+
+                    Console.Write("\n");
                 }
             }
+            Console.WriteLine("\n\n--- " + address + " ping statistics ---");
+            Console.WriteLine("4 packets transmitted, " + successful + " received, " + (4 - successful) + " lost");
         }
 
         public static void dnsping(string address)
         {
+            Logger.Debug("Called DNSPing, attempting to ping " + address);
             Console.WriteLine("Pinging " + address);
             #region Resolving DNS
             Address destination;
             using (var xClient = new DnsClient())
             {
+                Logger.Debug("Attempting to connect to DNS Server 1.1.1.1");
                 xClient.Connect(new Address(1, 1, 1, 1)); //DNS Server address
 
                 /** Send DNS ask for a single domain name **/
+                Logger.Debug("Asking DNS server to resolve domain name");
                 xClient.SendAsk(address);
 
                 /** Receive DNS Response **/
                 destination = xClient.Receive(); //can set a timeout value
             }
             #endregion
+            Console.WriteLine(address + " resolved to " + destination.ToString());
             ping(destination);
         }
     }

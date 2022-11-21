@@ -8,6 +8,8 @@ namespace GrapeFruit_CosmosDevKit
 {
     public class ErrorScreen
     {
+        //Disables "unreachable code" while we're running the devbuild
+        #pragma warning disable CS0162
         public static void GeneralError()
         {
             if (!Globals.devBuild)
