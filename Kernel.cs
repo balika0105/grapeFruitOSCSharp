@@ -70,6 +70,7 @@ namespace GrapeFruit_CosmosRolling
 
             Logger.Log(1, "Set hostname to \"livecd\""); ;
             Globals.hostname = "livecd";
+            Globals.workingdir = @"0:\";
             Logger.Log(1, "Init done");
 
 

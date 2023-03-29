@@ -27,7 +27,7 @@ namespace GrapeFruit_CosmosRolling
         public static string currentuser;
         public static string hostname;
         public static string workingdir;
-        public static string kblayout;
+        public static bool swapYZ;
 
 
         public static void printsysteminfo()

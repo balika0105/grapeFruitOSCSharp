@@ -46,7 +46,7 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "throwex":
-                    throw new DivideByZeroException();
+                    throw new ArgumentOutOfRangeException();
 
                 case "shutdown":
                     shutdown();
@@ -58,7 +58,10 @@ namespace GrapeFruit_CosmosRolling
 
                 case "ls":
                 case "dir":
-                    FS.List();
+                    if (splitinput.Length > 1)
+                        FS.List(splitinput[1]);
+                    else
+                        FS.List();
                     break;
 
                 case "touch":
@@ -100,6 +103,10 @@ namespace GrapeFruit_CosmosRolling
                     Mandb.man(splitinput[1]);
                     break;
 
+                case "kblayout":
+                    KBManager.AskForLayout();
+                    break;
+
                 default:
                     Console.WriteLine("Unknown command");
                     break;
@@ -109,7 +116,7 @@ namespace GrapeFruit_CosmosRolling
         //Always add every command here
         static void commands()
         {
-            Console.WriteLine("help/commands - shows command list\necho - prints to screen\nclear - clears screen\ntime - shows current time (RTC)\nthrowex - throws text exception\n\nls/dir - list directory contents\ntouch - create empty file with specified name\ncat - print file contents\ngfdisk - disk utility\n\nping - pings IPv4 address\ndnsping - Pings to domain\ntrydhcp - Attempt to discover DHCP manually\nhttp - sending an http request to the specified server (experimental)\nresolvedns - resolve domain to IPv4 manually\n\nman <command> - more information about command\n\nshutdown - turns off computer\nreboot - reboots computer");
+            Console.WriteLine("help/commands - shows command list\necho - prints to screen\nclear - clears screen\ntime - shows current time (RTC)\nthrowex - throws text exception\nkblayout - shows dialog to change kb layout\n\nls/dir - list directory contents\ntouch - create empty file with specified name\ncat - print file contents\ngfdisk - disk utility\n\nping - pings IPv4 address\ndnsping - Pings to domain\ntrydhcp - Attempt to discover DHCP manually\nhttp - sending an http request to the specified server (experimental)\nresolvedns - resolve domain to IPv4 manually\n\nman <command> - more information about command\n\nshutdown - turns off computer\nreboot - reboots computer");
         }
 
         static void echo(string[] input)
@@ -150,20 +157,41 @@ namespace GrapeFruit_CosmosRolling
         static bool choice()
         {
             Console.Write("Are you sure? (Y/n)");
-            switch (Console.ReadKey().Key)
+            if (!Globals.swapYZ)
             {
+                switch (Console.ReadKey().Key)
+                {
 
-                case ConsoleKey.Enter:
-                case ConsoleKey.Y:
-                    return true;
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Y:
+                        return true;
 
-                case ConsoleKey.N:
-                    Console.Write('\n');
-                    return false;
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
 
-                default:
-                    choice();
-                    break;
+                    default:
+                        choice();
+                        break;
+                }
+            }
+            else
+            {
+                switch (Console.ReadKey().Key)
+                {
+
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Z:
+                        return true;
+
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
+
+                    default:
+                        choice();
+                        break;
+                }
             }
             return false;
         }

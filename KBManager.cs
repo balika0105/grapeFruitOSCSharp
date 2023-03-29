@@ -15,12 +15,15 @@ namespace GrapeFruit_CosmosRolling
             {
                 case "enus":
                     Cosmos.System.KeyboardManager.SetKeyLayout(new USStandardLayout());
+                    Globals.swapYZ = false;
                     return true;
                 case "huhu":
                     Cosmos.System.KeyboardManager.SetKeyLayout(new HUStandardLayout());
+                    Globals.swapYZ = true;
                     return true;
                 case "dede":
                     Cosmos.System.KeyboardManager.SetKeyLayout(new DEStandardLayout());
+                    Globals.swapYZ = true;
                     return true;
                 default:
                     return false;
