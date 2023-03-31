@@ -47,7 +47,7 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 default:
-                    Console.WriteLine("No man entry for command");
+                    Console.WriteLine("Nothing appropriate");
                     break;
             }
         }

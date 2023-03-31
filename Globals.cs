@@ -13,7 +13,7 @@ namespace GrapeFruit_CosmosRolling
 {
     public class Globals
     {
-        public const string build = "0.0.21 CosmosRolling";
+        public const string build = "0.0.3 CosmosRolling";
         public const string osname = "GrapeFruitOS-Cosmos";
         public const bool devBuild = true;
 

@@ -32,6 +32,7 @@ namespace GrapeFruit_CosmosRolling
 
         public static bool AskForLayout()
         {
+            loopthing:
             Console.WriteLine("Choose keyboard layout:\n\t[1] en_US\n\t[2] hu_HU\n\t[3] de_DE");
             switch (Console.ReadKey().Key)
             {
@@ -55,8 +56,8 @@ namespace GrapeFruit_CosmosRolling
                     else
                         return false;
 
-                default: 
-                    return false;
+                default:
+                    goto loopthing;
             }
         }
     }

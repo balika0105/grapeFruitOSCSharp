@@ -65,11 +65,25 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "touch":
-                    FS.Touch(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        FS.Touch(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "cat":
-                    FS.Cat(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        FS.Cat(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "mkdir":
+                case "md":
+                    if (splitinput.Length > 1)
+                        FS.Mkdir(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "gfdisk":
@@ -77,11 +91,17 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "ping":
-                    GrapeFruitNW.ping(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        GrapeFruitNW.ping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "dnsping":
-                    GrapeFruitNW.dnsping(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        GrapeFruitNW.dnsping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "trydhcp":
@@ -96,11 +116,17 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "resolvedns":
-                    GrapeFruitNW.resolvedns(splitinput[1]);
+                    if(splitinput.Length > 1)
+                        GrapeFruitNW.resolvedns(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
-                case "man":
-                    Mandb.man(splitinput[1]);
+                case "whatis":
+                    if (splitinput.Length > 1)
+                        Mandb.man(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "kblayout":
@@ -116,7 +142,25 @@ namespace GrapeFruit_CosmosRolling
         //Always add every command here
         static void commands()
         {
-            Console.WriteLine("help/commands - shows command list\necho - prints to screen\nclear - clears screen\ntime - shows current time (RTC)\nthrowex - throws text exception\nkblayout - shows dialog to change kb layout\n\nls/dir - list directory contents\ntouch - create empty file with specified name\ncat - print file contents\ngfdisk - disk utility\n\nping - pings IPv4 address\ndnsping - Pings to domain\ntrydhcp - Attempt to discover DHCP manually\nhttp - sending an http request to the specified server (experimental)\nresolvedns - resolve domain to IPv4 manually\n\nman <command> - more information about command\n\nshutdown - turns off computer\nreboot - reboots computer");
+            Console.WriteLine("help/commands - shows command list");
+            Console.WriteLine("echo <message> - prints to screen");
+            Console.WriteLine("clear - clears screen");
+            Console.WriteLine("time - shows current time (RTC)");
+            Console.WriteLine("throwex - throws test exception");
+            Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
+            Console.WriteLine("\nls/dir - list directory contents");
+            Console.WriteLine("touch <filename> - create empty file with specified name");
+            Console.WriteLine("cat <filename> - print file contents");
+            Console.WriteLine("mkdir/md <name> - creates directory with name");
+            Console.WriteLine("gfdisk - disk utility");
+            Console.WriteLine("\nping <address> - pings IPv4 address");
+            Console.WriteLine("dnsping <domain name> - pings domain");
+            Console.WriteLine("trydhcp - attempt to set dhcp with discover");
+            Console.WriteLine("http <server address> - send http request to specified server (experimental)");
+            Console.WriteLine("resolvedns <domain name> - resolve domain to IPv4 manually");
+            Console.WriteLine("\nwhatis <command> - information about command");
+            Console.WriteLine("\nshutdown - turns off computer (asks for confirmation)");
+            Console.WriteLine("reboot - reboots computer (asks for confirmation)");
         }
 
         static void echo(string[] input)

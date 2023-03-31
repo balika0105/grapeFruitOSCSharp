@@ -17,16 +17,19 @@ namespace Cosmos.System.ScanMaps
         protected override void InitKeys()
         {
             Keys = new List<KeyMapping>(101);
+            GrapeFruit_CosmosRolling.CustomKeyMapping cKeyMap;
 
             #region Keys
 
             /*     Scan  Norm Shift Ctrl Alt     Num  Caps ShCaps ShNum ConsoleKeyEx */
+            //public KeyMapping(byte scanCode, char normal, char shift, char num, char caps, char shiftCapsLock, char shiftNumLock, char ctrlAlt, char ctrlAltShift, char ctrl, char shiftCtrl, ConsoleKeyEx key, ConsoleKeyEx numKey)
             Keys.Add(new KeyMapping(0x00, ConsoleKeyEx.NoName));
             Keys.Add(new KeyMapping(0x01, ConsoleKeyEx.Escape));
             /* ^1234567890ß´        °!"§$%&/()=?`       __²³£__{[]}\_ */
-            Keys.Add(new KeyMapping(0x29, '0', '§', '0', '0', '§', '0', ConsoleKeyEx.Backquote));
-            Keys.Add(new KeyMapping(0x02, '1', '\'', '1', '~', '\'', '1', ConsoleKeyEx.D1));
-            Keys.Add(new KeyMapping(0x03, '2', '"', '2', 'ˇ', '"', '2', '²', ConsoleKeyEx.D2));
+            Keys.Add(cKeyMap = new GrapeFruit_CosmosRolling.CustomKeyMapping(0x29, '0', '§', '0', '0', ConsoleKeyEx.Backquote));
+            Keys.Add(cKeyMap = new GrapeFruit_CosmosRolling.CustomKeyMapping(0x29, '1', '\'', '1', '~', ConsoleKeyEx.D1));
+            Keys.Add(cKeyMap = new GrapeFruit_CosmosRolling.CustomKeyMapping(0x29, '2', '"', '2', 'ˇ', ConsoleKeyEx.D2));
+
             Keys.Add(new KeyMapping(0x04, '3', '+', '3', '^', '+', '3', '³', ConsoleKeyEx.D3));
             Keys.Add(new KeyMapping(0x05, '4', '!', '4', '˘', '!', '4', '£', '£', ConsoleKeyEx.D4));
             Keys.Add(new KeyMapping(0x06, '5', '%', '5', '°', '%', '5', ConsoleKeyEx.D5));
@@ -57,7 +60,7 @@ namespace Cosmos.System.ScanMaps
             Keys.Add(new KeyMapping(0x1C, ConsoleKeyEx.Enter));
             Keys.Add(new KeyMapping(0x1D, ConsoleKeyEx.LCtrl));
             /* asdfghjklöä#         ASDFGHJKLÖÄ'        ____________ */
-            Keys.Add(new KeyMapping(0x1E, 'a', 'A', 'a', 'ä', 'a', 'A', ConsoleKeyEx.A));
+            Keys.Add(new KeyMapping(0x1E, 'a', 'A', 'ä', 'A', 'a', 'A', ConsoleKeyEx.A));
             Keys.Add(new KeyMapping(0x1F, 's', 'S', 's', 'đ', 's', 'S', ConsoleKeyEx.S));
             Keys.Add(new KeyMapping(0x20, 'd', 'D', 'd', 'Đ', 'd', 'D', ConsoleKeyEx.D));
             Keys.Add(new KeyMapping(0x21, 'f', 'F', 'f', '[', 'f', 'F', ConsoleKeyEx.F));
@@ -86,7 +89,7 @@ namespace Cosmos.System.ScanMaps
             /* Right Shift */
             Keys.Add(new KeyMapping(0x36, ConsoleKeyEx.RShift));
             /* Print Screen */
-            Keys.Add(new KeyMapping(0x37, '*', '*', '*', '*', '*', '*', ConsoleKeyEx.NumMultiply));
+            Keys.Add(new KeyMapping(0x37, 'n', 's', 'c', 'a', 'b', 'e', ConsoleKeyEx.NumMultiply));
             // also numpad multiply
             /* Alt  */
             Keys.Add(new KeyMapping(0x38, ConsoleKeyEx.LAlt));

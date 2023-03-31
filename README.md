@@ -3,6 +3,8 @@ A version of grapeFruitOS written in C#, made bootable with [Cosmos](https://git
 
 ### WARNING!
 
-This branch is in active development, the code can change any minute (currently working on fs issues)
+Some features are currently in an experimental phase. Use with caution!
 
-For stable source, use the main branch
+It is highly recommended to use this *operating system* in a Virtual Machine, instead of running it on real hardware.
+
+***We are not responsible for any type of data loss!***

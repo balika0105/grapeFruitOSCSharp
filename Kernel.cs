@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Sys = Cosmos.System;
 
@@ -33,44 +32,84 @@ namespace GrapeFruit_CosmosRolling
 
 
             Console.WriteLine("Initializing drivers, please wait...");
-            Logger.Log(1, "Filesystem init");
+
             #region FS Init
-            try
+            //Nulling FS vars, so if they're not initialised, FS commands can't be used
+            Globals.vFS = null;
+            Globals.drive = null;
+            Globals.workingdir = "";
+        fs_sw_loopback:
+            Console.Write("Load Filesystem drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
             {
-                Globals.vFS = new CosmosVFS();
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
-                Globals.drive = new DriveInfo("0");
-                Globals.workingdir = @"0:\";
-                Logger.Log(1, "FS Init ok");
-            }
-            catch (Exception ex)
-            {
-                ErrorScreen.SpecifiedError(ex);
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Console.WriteLine();
+                    Logger.Log(1, "Filesystem init");
+                    try
+                    {
+                        Globals.vFS = new CosmosVFS();
+                        Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
+                        Globals.drive = new DriveInfo("0");
+                        Globals.workingdir = @"0:\";
+                        Logger.Log(1, "FS Init ok");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorScreen.SpecifiedError(ex);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    goto fs_sw_loopback;
             }
             #endregion
 
             #region Network Init
-            Logger.Log(1, "Network init");
-            try
+            //Nulling NW vars, so if they're not initialised, NW commands can't be used
+            Globals.nic = null;
+        nw_init_loopback:
+            Console.Write("Load Network drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
             {
-                Globals.nic = Cosmos.HAL.NetworkDevice.GetDeviceByName("eth0");
-                if (Globals.nic.Enable())
-                {
-                    Logger.Log(1, "Network init ok");
-                    Logger.Log(1, "Attempting to set IP with DHCP...");
-                    GrapeFruitNW.DHCPDiscovery();
-                }
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Console.WriteLine();
+                    Logger.Log(1, "Network init");
+                    try
+                    {
+                        Globals.nic = Cosmos.HAL.NetworkDevice.GetDeviceByName("eth0");
+                        if (Globals.nic.Enable())
+                        {
+                            Logger.Log(1, "Network init ok");
+                            Logger.Log(1, "Attempting to set IP with DHCP...");
+                            GrapeFruitNW.DHCPDiscovery();
+                        }
 
-            }
-            catch (Exception e)
-            {
-                Logger.Log(3, "Couldn't initialise network. Error: " + e.Message);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log(3, "Couldn't initialise network. Error: " + e.Message);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    goto nw_init_loopback;
             }
             #endregion
 
             Logger.Log(1, "Set hostname to \"livecd\""); ;
             Globals.hostname = "livecd";
-            Globals.workingdir = @"0:\";
             Logger.Log(1, "Init done");
 
 
