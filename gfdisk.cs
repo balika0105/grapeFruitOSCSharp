@@ -10,20 +10,26 @@ using Cosmos.System.FileSystem.VFS;
 using Cosmos.System.FileSystem;
 using Cosmos.HAL.BlockDevice;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class gfdisk
     {
         public static void main()
         {
-            Console.Clear();
-            Console.WriteLine("GFDisk - GrapeFruit Disk Utility v0.1");
-            do
+            if (Globals.vFS == null)
             {
-                Console.Write("gfdisk > ");
+                Console.WriteLine("gfdisk - file system isn't initialised");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("GFDisk - GrapeFruit Disk Utility v0.1");
+                do
+                {
+                    Console.Write("gfdisk > ");
 
-            } while (Command(Console.ReadLine()));
-
+                } while (Command(Console.ReadLine()));
+            }
         }
 
         static bool Command(string command)
@@ -39,10 +45,18 @@ namespace GrapeFruit_CosmosDevKit
                     Console.Write("\n");
                     return true;
 
-                /*case "createpart":
-                    Console.Write("Enter disk number to create a partition on: ");
-                    int*
-                    return true;*/
+                case "listvolumes":
+                    var volumes = Globals.vFS.GetVolumes(); ;
+                    foreach (var vol in volumes)
+                    {
+                        Console.WriteLine("  " + vol.mName + "\t   \t" + Globals.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                    }
+                    return true;
+
+                case "help":
+                    Console.WriteLine("getdisks: list disks");
+                    Console.WriteLine("listvolumes: list volumes on every disk");
+                    return true;
 
                 case "exit":
                     return false;

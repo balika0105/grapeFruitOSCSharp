@@ -10,89 +10,190 @@ using Cosmos.System.Network.IPv4.UDP.DHCP;
 using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.UDP.DNS;
+using Cosmos.System.Network.IPv4.TCP;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class GrapeFruitNW
     {
         public static void DHCPDiscovery()
         {
-            var xClient = new DHCPClient();
-            if(xClient.SendDiscoverPacket() > -1)
-                Logger.Log(1, "IP Set with DHCP: " + NetworkConfiguration.CurrentAddress.ToString());
+            if (Globals.nic == null)
+            {
+                Console.WriteLine("GrapeFruitNW.DHCPDiscovery: Network device is not initialised");
+            }
             else
-                Logger.Log(2, "Failed to set IP with DHCP");
-
+            {
+                Logger.Debug("DHCPDiscovery called");
+                using (var xClient = new DHCPClient())
+                {
+                    Logger.Debug("using xClient DHCP");
+                    /** Send a DHCP Discover packet **/
+                    //This will automatically set the IP config after DHCP response
+                    if (xClient.SendDiscoverPacket() > -1)
+                        Logger.Log(1, "IP Set with DHCP: " + NetworkConfiguration.CurrentAddress.ToString());
+                    else
+                        Logger.Log(2, "Failed to set IP with DHCP");
+                }
+            }
         }
 
         public static void ping(string address)
         {
-            Console.WriteLine("Pinging " + address);
-
-            Cosmos.System.Global.mDebugger.Send("Trying to split address to ping");
-
-            string[] address_ = address.Split('.');
-            byte[] realAddress = { };
-
-            Cosmos.System.Global.mDebugger.Send("Converting address to an array");
-            for (int i = 0; i < 4; i++)
+            if (Globals.nic == null)
             {
-                realAddress[i] = byte.Parse(address_[i]);
+                Console.WriteLine("GrapeFruitNW.ping: Network device is not initialised");
             }
-
-            using (var xClient = new ICMPClient())
+            else
             {
-                Cosmos.System.Global.mDebugger.Send("Setting frAddress");
-                Address frAddress = new Address(realAddress[0], realAddress[1], realAddress[2], realAddress[3]);
-                Cosmos.System.Global.mDebugger.Send("Trying to connect");
-                xClient.Connect(frAddress);
+                Console.WriteLine("PING " + address);
+                byte successful = 0;
 
-                Cosmos.System.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(frAddress, 7);
-
-                for (int i = 0; i < 4; i++)
+                using (var xClient = new ICMPClient())
                 {
-                    xClient.SendEcho();
-                    int time = xClient.Receive(ref endPoint);
-                    Console.Write("\nReplied in " + time + "s");
+                    Sys.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                    xClient.Connect(Address.Parse(address));
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        xClient.SendEcho();
+                        int time = xClient.Receive(ref endPoint);
+                        if (time >= 0)
+                        {
+                            Console.Write("Reply from " + address + ": icmp_seq=" + (i + 1) + " time=" + time);
+                            successful++;
+                        }
+                        else
+                        {
+                            Console.Write("Request timed out");
+                        }
+
+                        Console.Write("\n");
+                    }
                 }
+                Console.WriteLine("\n\n--- " + address + " ping statistics ---");
+                Console.WriteLine("4 packets transmitted, " + successful + " received, " + (4 - successful) + " lost");
             }
         }
 
         static void ping(Address address)
         {
-            using (var xClient = new ICMPClient())
+            if (Globals.nic == null)
             {
-                
-                xClient.Connect(address);
+                Console.WriteLine("GrapeFruitNW.ping: Network device is not initialised");
+            }
+            else
+            {
+                Console.WriteLine("PING " + address.ToString());
+                byte successful = 0;
 
-                Cosmos.System.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(address, 7);
-
-                for (int i = 0; i < 4; i++)
+                using (var xClient = new ICMPClient())
                 {
-                    xClient.SendEcho();
-                    int time = xClient.Receive(ref endPoint);
-                    Console.Write("\nReplied in " + time + "s");
+                    Sys.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                    xClient.Connect(address);
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        xClient.SendEcho();
+                        int time = xClient.Receive(ref endPoint);
+                        if (time >= 0)
+                        {
+                            Console.Write("Reply from " + address + ": icmp_seq=" + (i + 1) + " time=" + time);
+                            successful++;
+                        }
+                        else
+                        {
+                            Console.Write("Request timed out");
+                        }
+
+                        Console.Write("\n");
+                    }
                 }
+                Console.WriteLine("\n\n--- " + address + " ping statistics ---");
+                Console.WriteLine("4 packets transmitted, " + successful + " received, " + (4 - successful) + " lost");
             }
         }
 
         public static void dnsping(string address)
         {
-            Console.WriteLine("Pinging " + address);
+            if (Globals.nic == null)
+            {
+                Console.WriteLine("GrapeFruitNW.dnsping: Network device is not initialised");
+            }
+            else
+            {
+                Logger.Debug("Called DNSPing, attempting to ping " + address);
+                Console.WriteLine("Pinging " + address);
+                #region Resolving DNS
+                Address destination = dnsresolve(address);
+                #endregion
+                Console.WriteLine(address + " resolved to " + destination.ToString());
+                ping(destination);
+            }
+        }
+
+        public static void http(string url)
+        {
+            if (Globals.nic == null)
+            {
+                Console.WriteLine("GrapeFruitNW.http: Network device is not initialised");
+            }
+            else
+            {
+                using (var xClient = new TcpClient(80))
+                {
+                    //Resolving domain to IPv4
+                    Address destination = dnsresolve(url);
+                    xClient.Connect(destination, 80);
+
+                    //Sending a HTTP request
+                    string message = "POST / HTTP/1.1\nHost: localhost:80\nUser-Agent: httpCommand/0.1 (GrapeFruit)\nAccept: text/html\nAccept-Language: en-US,en;q=0.5\nConnection: keep-alive";
+                    xClient.Send(Encoding.ASCII.GetBytes(message));
+
+                    //Receiving data
+                    var endpoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                    var data = xClient.Receive(ref endpoint);
+                    var data2 = xClient.NonBlockingReceive(ref endpoint);
+
+                    Console.WriteLine("Received data as follows: ");
+                    foreach (byte item in data2)
+                    {
+                        Console.Write(item);
+                    }
+                }
+            }
+        }
+
+        static Address dnsresolve(string address)
+        {
             #region Resolving DNS
             Address destination;
             using (var xClient = new DnsClient())
             {
-                xClient.Connect(new Address(1, 1, 1, 1)); //DNS Server address
+                Logger.Debug("Attempting to connect to OpenDNS (208.67.222.222");
+                xClient.Connect(new Address(208, 67, 222, 222)); //DNS Server address
 
                 /** Send DNS ask for a single domain name **/
+                Logger.Debug("Asking DNS server to resolve domain name");
                 xClient.SendAsk(address);
 
                 /** Receive DNS Response **/
                 destination = xClient.Receive(); //can set a timeout value
             }
             #endregion
-            ping(destination);
+            return destination;
+        }
+        public static void resolvedns(string address)
+        {
+            if (Globals.nic == null)
+            {
+                Console.WriteLine("GrapeFruitNW.resolvedns: Network device is not initialised");
+            }
+            else
+            {
+                Address server = dnsresolve(address);
+                Console.WriteLine(address + " resolved to " + server.ToString());
+            }
         }
     }
 }

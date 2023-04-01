@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Sys = Cosmos.System;
 
@@ -8,62 +7,122 @@ using System.IO;
 using Cosmos.System.Graphics;
 using Cosmos.System.ExtendedASCII;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class Kernel : Sys.Kernel
     {
 
         protected override void BeforeRun()
         {   
-            Sys.Global.mDebugger.Send("Grapefruit OS takes over here");
-            //Extented ASCII
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-            //Set screen size
-            VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x25);
+            Logger.Debug("Grapefruit OS code begins here");
 
-            //Unused
-            #region Screen size setup
-            //Console.WriteLine("Choose screen size:");
-            //Console.WriteLine("(1): 90x60");
-            //Console.WriteLine("(2): 90x30");
-            //Console.WriteLine("(3): 80x50");
-            //Console.WriteLine("(4): 80x25");
-            //Console.WriteLine("(5): 40x50");
-            //Console.WriteLine("(6): 40x25");
+            // Moved "change screen size" and "use Extended ASCII", so
+            // if there's any trouble on boot, we can see it
+            Console.WriteLine();
 
-            //Console.Write("\n > ");
-            //switch (Console.ReadKey().Key)
-            //{
-            //    case ConsoleKey.D1:
-            //    case ConsoleKey.NumPad1:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size90x60);
-            //        break;
-            //    case ConsoleKey.D2:
-            //    case ConsoleKey.NumPad2:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size90x30);
-            //        break;
-            //    case ConsoleKey.D3:
-            //    case ConsoleKey.NumPad3:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x50);
-            //        break;
-            //    case ConsoleKey.D4:
-            //    case ConsoleKey.NumPad4:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x25);
-            //        break;
-            //    case ConsoleKey.D5:
-            //    case ConsoleKey.NumPad5:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size40x50);
-            //        break;
-            //    case ConsoleKey.D6:
-            //    case ConsoleKey.NumPad6:
-            //        VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size40x25);
-            //        break;
+            // Linux-style greeting
+            Console.Write("Welcome to ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("GrapeFruit OS!");
+            Console.ForegroundColor = ConsoleColor.White;
 
-            //    default:
-            //        break;
-            //}
+
+            Console.WriteLine("Initializing drivers, please wait...");
+
+            #region FS Init
+            //Nulling FS vars, so if they're not initialised, FS commands can't be used
+            Globals.vFS = null;
+            Globals.drive = null;
+            Globals.workingdir = "";
+        fs_sw_loopback:
+            Console.Write("Load Filesystem drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
+            {
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Console.WriteLine();
+                    Logger.Log(1, "Filesystem init");
+                    try
+                    {
+                        Globals.vFS = new CosmosVFS();
+                        Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
+                        Globals.drive = new DriveInfo("0");
+                        Globals.workingdir = @"0:\";
+                        Logger.Log(1, "FS Init ok");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorScreen.SpecifiedError(ex);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    goto fs_sw_loopback;
+            }
             #endregion
 
+            #region Network Init
+            //Nulling NW vars, so if they're not initialised, NW commands can't be used
+            Globals.nic = null;
+        nw_init_loopback:
+            Console.Write("Load Network drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
+            {
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Console.WriteLine();
+                    Logger.Log(1, "Network init");
+                    try
+                    {
+                        Globals.nic = Cosmos.HAL.NetworkDevice.GetDeviceByName("eth0");
+                        if (Globals.nic.Enable())
+                        {
+                            Logger.Log(1, "Network init ok");
+                            Logger.Log(1, "Attempting to set IP with DHCP...");
+                            GrapeFruitNW.DHCPDiscovery();
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log(3, "Couldn't initialise network. Error: " + e.Message);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    goto nw_init_loopback;
+            }
+            #endregion
+
+            Logger.Log(1, "Set hostname to \"livecd\""); ;
+            Globals.hostname = "livecd";
+            Logger.Log(1, "Init done");
+
+
+            KBManager.AskForLayout();
+            
+
+            if (!UserHandler.Login())
+            {
+                ErrorScreen.CustomError("Failed to create live user, system cannot progress");
+            }
+
+            //Extented ASCII
+            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            Console.InputEncoding = Encoding.GetEncoding(437);
+            Console.OutputEncoding = Encoding.GetEncoding(437);
+            //Set screen size
+            VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x25);
 
             Console.Clear();
             #region splash
@@ -77,58 +136,9 @@ namespace GrapeFruit_CosmosDevKit
             Console.WriteLine(@"                  |_|                                               ");
             Console.Write("\n\n");
             #endregion
-
-
-            Console.WriteLine("Initializing drivers, please wait...");
-            Logger.Log(1, "Filesystem init");
-            //FS Init
-            try
-            {
-                Globals.vFS = new CosmosVFS();
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
-                Globals.drive = new DriveInfo("0");
-                Globals.workingdir = @"0:\";
-                Logger.Log(1, "FS Init ok");
-            }
-            catch (Exception ex)
-            {
-                ErrorScreen.SpecifiedError(ex);
-            }
-
-            //Network init
-            Logger.Log(1, "Network init");
-            try
-            {
-                Globals.nic = Cosmos.HAL.NetworkDevice.GetDeviceByName("eth0");
-                if (Globals.nic.Enable())
-                {
-                    Logger.Log(1, "Network init ok");
-                    Logger.Log(1, "Attempting to set IP with DHCP...");
-                    GrapeFruitNW.DHCPDiscovery();
-                }
-                    
-            }
-            catch (Exception e)
-            {
-                Logger.Log(3, "Couldn't initialise network. Error: " + e.Message);
-            }
-
-
-            Logger.Log(1, "Set hostname to \"livecd\""); ;
-            Globals.hostname = "livecd";
-            Logger.Log(1, "Init done");
-
-
-            if (!UserHandler.Login())
-            {
-                ErrorScreen.CustomError("Failed to create live user, system cannot progress");
-            }
-
-
-            Console.Clear();
             //Print system data
             Globals.printsysteminfo();
-            Cosmos.System.Global.mDebugger.Send("Run() has our own things");
+            Logger.Debug("Calling Run()");
         }
 
         protected override void Run()

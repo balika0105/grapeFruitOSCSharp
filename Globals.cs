@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Cosmos.System.FileSystem;
 using System.IO;
 using Cosmos.HAL;
+using System.Net.NetworkInformation;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class Globals
     {
-        public const string build = "0.0.3 CosmosDevKitBuild";
+        public const string build = "0.0.43 CosmosRolling";
         public const string osname = "GrapeFruitOS-Cosmos";
         public const bool devBuild = true;
 
@@ -22,14 +23,16 @@ namespace GrapeFruit_CosmosDevKit
         public static NetworkDevice nic;
 
         //ENV
+        //public static IDictionary<string, string> Environment = new Dictionary<string, string>();
         public static string currentuser;
         public static string hostname;
         public static string workingdir;
+        public static bool swapYZ;
 
 
         public static void printsysteminfo()
         {
-            Console.WriteLine("\n" + osname + " " + build);
+            Console.WriteLine(osname + " " + build);
             Console.WriteLine("Total memory: " + Cosmos.Core.GCImplementation.GetAvailableRAM() + "MB");
             Console.WriteLine("Used memory: " + Cosmos.Core.GCImplementation.GetUsedRAM() + " bytes");
         }

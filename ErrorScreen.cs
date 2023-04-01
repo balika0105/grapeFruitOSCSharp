@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class ErrorScreen
     {
+        //Disables "unreachable code" while we're running the devbuild
+#pragma warning disable CS0162
         public static void GeneralError()
         {
             if (!Globals.devBuild)
@@ -52,10 +54,7 @@ namespace GrapeFruit_CosmosDevKit
             }
             else
             {
-                if (e.Message != "")
-                    Logger.Log(3, "System Exception | Message: " + e.Message);
-                else
-                    Logger.Log(3, "System Exception | Error message unavailable ");
+                Logger.Log(3, "System Exception | Exception: " + e.ToString()+ "\n\tMessage: " + e.Message);
             }
 
         }

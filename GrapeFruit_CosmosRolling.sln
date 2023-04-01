@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrapeFruit_CosmosRolling", "GrapeFruit_CosmosRolling.csproj", "{5A070B3F-396C-4CCA-A1E8-EB4AC60C5358}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A070B3F-396C-4CCA-A1E8-EB4AC60C5358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A070B3F-396C-4CCA-A1E8-EB4AC60C5358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A070B3F-396C-4CCA-A1E8-EB4AC60C5358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A070B3F-396C-4CCA-A1E8-EB4AC60C5358}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {826382E3-33C4-48F7-AAB0-B000D7F01475}
+	EndGlobalSection
+EndGlobal

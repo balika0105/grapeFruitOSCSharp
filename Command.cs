@@ -1,11 +1,12 @@
-﻿using Cosmos.System.Network.Config;
+﻿using Cosmos.System.FileSystem;
+using Cosmos.System.Network.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosDevKit
+namespace GrapeFruit_CosmosRolling
 {
     public class Command
     {
@@ -41,11 +42,14 @@ namespace GrapeFruit_CosmosDevKit
 
                 case "help":
                 case "commands":
-                    commands();
+                    if (splitinput.Length > 1)
+                        commands(splitinput[1]);
+                    else
+                        commands();
                     break;
 
                 case "throwex":
-                    throw new DivideByZeroException();
+                    throw new ArgumentOutOfRangeException();
 
                 case "shutdown":
                     shutdown();
@@ -57,15 +61,43 @@ namespace GrapeFruit_CosmosDevKit
 
                 case "ls":
                 case "dir":
-                    FS.List();
+                    if (splitinput.Length > 1)
+                        FS.List(splitinput[1]);
+                    else
+                        FS.List();
+                    break;
+
+                case "cd":
+                    if (splitinput.Length > 1)
+                        FS.Chdir(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "pwd":
+                    Console.WriteLine(Globals.workingdir);
                     break;
 
                 case "touch":
-                    FS.Touch(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        FS.Touch(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "cat":
-                    FS.Cat(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        FS.Cat(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "mkdir":
+                case "md":
+                    if (splitinput.Length > 1)
+                        FS.Mkdir(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "gfdisk":
@@ -73,31 +105,125 @@ namespace GrapeFruit_CosmosDevKit
                     break;
 
                 case "ping":
-                    GrapeFruitNW.ping(splitinput[1]);
+                    if (splitinput.Length > 1)
+                        GrapeFruitNW.ping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 case "dnsping":
-                    GrapeFruitNW.dnsping(splitinput[1]);
-                break;
+                    if (splitinput.Length > 1)
+                        GrapeFruitNW.dnsping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
 
                 case "trydhcp":
+                    Logger.Debug("Clearing network configurations");
+                    NetworkConfiguration.ClearConfigs();
+                    Logger.Debug("Attempting DHCP Discovery");
                     GrapeFruitNW.DHCPDiscovery();
                     break;
 
-                case "man":
-                    man(splitinput[1]);
+                case "http":
+                    GrapeFruitNW.http(splitinput[1]);
+                    break;
+
+                case "resolvedns":
+                    if(splitinput.Length > 1)
+                        GrapeFruitNW.resolvedns(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "whatis":
+                    if (splitinput.Length > 1)
+                        Mandb.man(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "kblayout":
+                    KBManager.AskForLayout();
+                    break;
+
+                case "nano":
+                    if (splitinput.Length > 1)
+                        nano.nanomain.Main(splitinput[1]);
+                    else
+                        nano.nanomain.Main();
+                    break;
+
+                case "rm":
+                    if (splitinput.Length > 1)
+                        FS.Remove(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
                     break;
 
                 default:
-                    Console.WriteLine("Unknown command");
+                    Console.WriteLine("gfsh> Unknown command");
                     break;
             }
         }
 
         //Always add every command here
-        static void commands()
+        static void commands(string category = "")
         {
-            Console.WriteLine("help/commands - shows command list\necho - prints to screen\nclear - clears screen\ntime - shows current time (RTC)\nthrowex - throws text exception\n\nls/dir - list directory contents\ntouch - create empty file with specified name\ncat - print file contents\ngfdisk - disk utility\n\nping - pings IPv4 address\ndnsping - Pings to domain\ntrydhcp - Attempt to discover DHCP manually\n\nman <command> - more information about command\n\nshutdown - turns off computer\nreboot - reboots computer");
+            switch (category)
+            {
+                case "":
+                default:
+                    Console.WriteLine("Commands have been organised into categories");
+                    Console.WriteLine("To access categories, type in the following:");
+                    Console.WriteLine("\t- help <category>");
+                    Console.WriteLine("\t- commands <category>");
+
+                    Console.WriteLine("\nAvailable categories:");
+                    Console.WriteLine("\t- system");
+                    Console.WriteLine("\t- network");
+                    Console.WriteLine("\t- fs (as in filesystem)");
+                    break;
+
+                case "system":
+                    Console.WriteLine("Available commands in \"system\" category:\n");
+                    Console.WriteLine("help/commands - shows command list");
+                    Console.WriteLine("echo <message> - prints to screen");
+                    Console.WriteLine("clear - clears screen");
+                    Console.WriteLine("time - shows current time (RTC)");
+                    Console.WriteLine("throwex - throws test exception");
+                    Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
+                    Console.WriteLine("shutdown - turns off computer (asks for confirmation)");
+                    Console.WriteLine("reboot - reboots computer (asks for confirmation)");
+                    Console.WriteLine("whatis <command> - information about command");
+                    break;
+
+                case "network":
+                    Console.WriteLine("Available commands in \"network\" category:\n");
+                    Console.WriteLine("ping <address> - pings IPv4 address");
+                    Console.WriteLine("dnsping <domain name> - pings domain");
+                    Console.WriteLine("trydhcp - attempt to set dhcp with discover");
+                    Console.WriteLine("http <server address> - send http request to specified server (experimental)");
+                    Console.WriteLine("resolvedns <domain name> - resolve domain to IPv4 manually");
+                    break;
+
+                case "fs":
+                    Console.WriteLine("Available commands in \"fs\" category:\n");
+                    Console.WriteLine("ls/dir - list directory contents");
+                    Console.WriteLine("rm - remove file");
+                    Console.WriteLine("touch <filename> - create empty file with specified name");
+                    Console.WriteLine("cat <filename> - print file contents");
+                    Console.WriteLine("mkdir/md <name> - creates directory with name");
+                    Console.WriteLine("gfdisk - disk utility");
+                    Console.WriteLine("nano <filename> - text editor");
+                    break;
+            }
+            
+            
+            
+            
+            
+            
         }
 
         static void echo(string[] input)
@@ -137,54 +263,41 @@ namespace GrapeFruit_CosmosDevKit
 
         static bool choice()
         {
+            redochoice:
             Console.Write("Are you sure? (Y/n)");
-            switch (Console.ReadKey().Key)
+            if (!Globals.swapYZ)
             {
+                switch (Console.ReadKey().Key)
+                {
 
-                case ConsoleKey.Enter:
-                case ConsoleKey.Y:
-                    return true;
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Y:
+                        return true;
 
-                case ConsoleKey.N:
-                    return false;
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
 
-                default:
-                    choice();
-                    break;
+                    default:
+                        goto redochoice;
+                }
             }
-            return false;
-        }
-
-        static void man(string command)
-        {
-            //"""""mandb"""""
-            switch (command)
+            else
             {
-                case "echo":
-                    Console.WriteLine("Usage: echo <text>");
-                    Console.WriteLine("\"Echoes\" back text after the command");
-                    break;
+                switch (Console.ReadKey().Key)
+                {
 
-                case "touch":
-                    Console.WriteLine("Usage: touch <filename>");
-                    Console.WriteLine("Creates empty file with the specified name");
-                    break;
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Z:
+                        return true;
 
-                case "ping":
-                    Console.WriteLine("Usage: ping <IPv4 address>");
-                    Console.WriteLine("Example: ping 1.1.1.1");
-                    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
-                    break;
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
 
-                case "dnsping":
-                    Console.WriteLine("Usage: dnsping <Domain name>");
-                    Console.WriteLine("Example: dnsping archlinux.org");
-                    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
-                    break;
-
-                default:
-                    Console.WriteLine("No man entry for command");
-                    break;
+                    default:
+                        goto redochoice;
+                }
             }
         }
     }
