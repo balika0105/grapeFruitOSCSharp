@@ -1,6 +1,11 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-04-02
+- Fixed an issue where if you used `touch` to create a file, then opened it with `nano`,
+  `nano` would crash because the file was literally 0 in length.
+  `touch` now adds a zero character (`\0`) to every file created, so `nano` won't crash
+
 ### 2023-04-01
 - Reorganised `help` command
 - Introduced `nano`

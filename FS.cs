@@ -64,7 +64,14 @@ namespace GrapeFruit_CosmosRolling
                 try
                 {
                     if (!File.Exists(filename))
+                    {
                         File.Create(filename);
+
+                        //Adding a zero character to the file, so nano doesn't crash when opening it
+                        StreamWriter writer = new StreamWriter(filename);
+                        writer.Write('\0');
+                        writer.Close();
+                    }
                     else
                         Console.WriteLine("File already exists");
                 }
