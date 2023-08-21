@@ -1,6 +1,13 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-08-21
+- Updated to latest build of Cosmos
+- Created new project file to accomodate changes
+- Minor changes to `nano`
+    - New header and footer
+    - Overhauled input logic
+
 ### 2023-04-02
 - Fixed an issue where if you used `touch` to create a file, then opened it with `nano`,
   `nano` would crash because the file was literally 0 in length.

@@ -4,21 +4,27 @@ using System.IO;
 
 using Sys = Cosmos.System;
 
+using Cosmos.HAL.Drivers.Video;
+
 namespace GrapeFruit_CosmosRolling.nano
 {
     public class nanomain
     {
+        const string verNum = "0.3";
+        static string fileName = "";
+        static int cursorX, cursorY;
+
+        static List<string> text;
+
+        static bool saveFileFooter;
+
         public static void Main(string file = "")
         {
             Logger.Debug("Nano launched");
+            cursorX = 0;
+            cursorY = 0;
 
-            //Greeting the user
-            Console.WriteLine("GrapeFruitNano 0.2");
-            Console.WriteLine("Ctrl-O to save, Ctrl-X to exit");
-            Console.WriteLine("\nPress a key to continue . . .");
-            Console.ReadKey();
-
-            List<string> text = new List<string>();
+            text = new List<string>();
             if (file == "")
             {
                 text.Add("");
@@ -51,15 +57,19 @@ namespace GrapeFruit_CosmosRolling.nano
                 }
             }
 
+            fileName = file;
             Logger.Debug($"{file}");
 
 
-            int cursorX = 0;
-            int cursorY = 0;
+            
 
             while (true)
             {
-                Render(text, cursorX, cursorY);
+                Render(text, cursorX, cursorY, saveFileFooter);
+                if(saveFileFooter)
+                {
+                    saveFileFooter = false;
+                }
 
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
@@ -69,131 +79,169 @@ namespace GrapeFruit_CosmosRolling.nano
                     Console.Clear();
                     break;
                 }
-                else if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.O)
+                if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.O)
                 {
                     // Save the file
                     SaveFile(text, file);
                 }
-                else if (key.Key == ConsoleKey.Enter)
+
+                switch (key.Key)
                 {
-                    // Insert a new line
-                    Logger.Debug("LF");
-                    text.Insert(cursorY + 1, text[cursorY].Substring(cursorX));
-                    text[cursorY] = text[cursorY].Substring(0, cursorX);
-                    cursorY++;
-                    cursorX = 0;
-                }
-                else if (key.Key == ConsoleKey.Backspace)
-                {
-                    // Delete the character to the left of the cursor
-                    Logger.Debug("BKSP");
-                    if (cursorX > 0)
-                    {
-                        text[cursorY] = text[cursorY].Remove(cursorX - 1, 1);
-                        cursorX--;
-                    }
-                    else if (cursorY > 0)
-                    {
-                        int lineLength = text[cursorY - 1].Length;
-                        text[cursorY - 1] += text[cursorY];
-                        text.RemoveAt(cursorY);
-                        cursorY--;
-                        cursorX = lineLength;
-                    }
-                }
-                else if (key.Key == ConsoleKey.Delete)
-                {
-                    Logger.Debug("DEL");
-                    // Delete the character at the cursor
-                    if (cursorX < text[cursorY].Length)
-                    {
-                        text[cursorY] = text[cursorY].Remove(cursorX, 1);
-                    }
-                    else if (cursorY < text.Count - 1)
-                    {
-                        text[cursorY] += text[cursorY + 1];
-                        text.RemoveAt(cursorY + 1);
-                    }
-                }
-                else if (key.Key == ConsoleKey.LeftArrow)
-                {
-                    // Move the cursor left
-                    Logger.Debug("LeftArrow");
-                    if (cursorX > 0)
-                    {
-                        cursorX--;
-                    }
-                    else if (cursorY > 0)
-                    {
-                        cursorY--;
-                        cursorX = text[cursorY].Length;
-                    }
-                }
-                else if (key.Key == ConsoleKey.RightArrow)
-                {
-                    // Move the cursor right
-                    Logger.Debug("RightArrow");
-                    if (cursorX < text[cursorY].Length)
-                    {
-                        cursorX++;
-                    }
-                    else if (cursorY < text.Count - 1)
-                    {
+                    case ConsoleKey.Enter:
+                        // Insert a new line
+                        Logger.Debug("LF");
+                        text.Insert(cursorY + 1, text[cursorY].Substring(cursorX));
+                        text[cursorY] = text[cursorY].Substring(0, cursorX);
                         cursorY++;
                         cursorX = 0;
-                    }
-                }
-                else if (key.Key == ConsoleKey.UpArrow)
-                {
-                    // Move the cursor up
-                    Logger.Debug("UpArrow");
-                    if (cursorY > 0)
-                    {
-                        cursorY--;
-                        cursorX = Math.Min(cursorX, text[cursorY].Length);
-                    }
-                }
-                else if (key.Key == ConsoleKey.DownArrow)
-                {
-                    // Move the cursor down
-                    Logger.Debug("DownArrow");
-                    if (cursorY < text.Count - 1)
-                    {
-                        cursorY++;
-                        cursorX = Math.Min(cursorX, text[cursorY].Length);
-                    }
-                }
-                else if (key.KeyChar >= ' ')
-                {
-                    // Insert a character at the cursor
-                    Logger.Debug("Insert char \'" + key.KeyChar + '\'');
-                    string line = text[cursorY];
-                    text[cursorY] = line.Substring(0, cursorX) + key.KeyChar + line.Substring(cursorX);
-                    cursorX++;
-                    /*selectionStartX = cursorX;
-                    selectionStartY = cursorY;*/
-                }
+                        break;
+                    case ConsoleKey.Backspace:
+                        // Delete the character to the left of the cursor
+                        Logger.Debug("BKSP");
+                        if (cursorX > 0)
+                        {
+                            text[cursorY] = text[cursorY].Remove(cursorX - 1, 1);
+                            cursorX--;
+                        }
+                        else if (cursorY > 0)
+                        {
+                            int lineLength = text[cursorY - 1].Length;
+                            text[cursorY - 1] += text[cursorY];
+                            text.RemoveAt(cursorY);
+                            cursorY--;
+                            cursorX = lineLength;
+                        }
+                        break;
+                    case ConsoleKey.Delete:
+                        Logger.Debug("DEL");
+                        // Delete the character at the cursor
+                        if (cursorX < text[cursorY].Length)
+                        {
+                            text[cursorY] = text[cursorY].Remove(cursorX, 1);
+                        }
+                        else if (cursorY < text.Count - 1)
+                        {
+                            text[cursorY] += text[cursorY + 1];
+                            text.RemoveAt(cursorY + 1);
+                        }
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        // Move the cursor left
+                        Logger.Debug("LeftArrow");
+                        if (cursorX > 0)
+                        {
+                            cursorX--;
+                        }
+                        else if (cursorY > 0)
+                        {
+                            cursorY--;
+                            cursorX = text[cursorY].Length;
+                        }
+                        break;
+                    case ConsoleKey.RightArrow:
+                        // Move the cursor right
+                        Logger.Debug("RightArrow");
+                        if (cursorX < text[cursorY].Length)
+                        {
+                            cursorX++;
+                        }
+                        else if (cursorY < text.Count - 1)
+                        {
+                            cursorY++;
+                            cursorX = 0;
+                        }
+                        break;
+                    case ConsoleKey.UpArrow:
+                        // Move the cursor up
+                        Logger.Debug("UpArrow");
+                        if (cursorY > 0)
+                        {
+                            cursorY--;
+                            cursorX = Math.Min(cursorX, text[cursorY].Length);
+                        }
+                        break;
+                    case ConsoleKey.DownArrow:
+                        // Move the cursor down
+                        Logger.Debug("DownArrow");
+                        if (cursorY < text.Count - 1)
+                        {
+                            cursorY++;
+                            cursorX = Math.Min(cursorX, text[cursorY].Length);
+                        }
+                        break;
+                    case ConsoleKey.End:
+                        //Move cursor to end of line
+                        Logger.Debug("End key");
+                        if (cursorX < text[cursorY].Length)
+                        {
+                            cursorX = text[cursorY].Length;
+                        }
+                        break;
+                    case ConsoleKey.Home:
+                        //Move cursor to beginning of line
+                        Logger.Debug("Home key");
+                        cursorX = 0;
+                        break;
+                    default:
+                        if (key.KeyChar >= ' ')
+                        {
+                            // Insert a character at the cursor
+                            Logger.Debug("Insert char \'" + key.KeyChar + '\'');
+                            string line = text[cursorY];
+                            text[cursorY] = line.Substring(0, cursorX) + key.KeyChar + line.Substring(cursorX);
+                            cursorX++;
+                            /*selectionStartX = cursorX;
+                            selectionStartY = cursorY;*/
+                        }
+                        break;
+                }   
             }
         }
 
-        static void Render(List<string> text, int cursorX, int cursorY)
+
+
+        static void Render(List<string> text, int cursorX, int cursorY, bool saved = false)
         {
             Logger.Debug("Render");
             Console.Clear();
+            //Writing window header
+            Console.SetCursorPosition(0, 0);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write("GrapeFruit Nano "+ verNum + " | Editing: " + fileName);
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.SetCursorPosition(cursorX, cursorY);
+
             for (int i = 0; i < text.Count; i++)
             {
-                Console.SetCursorPosition(0, i);
+                Console.SetCursorPosition(0, i+1);
                 Console.Write(text[i]);
             }
 
             //Writing small footer
-            /*Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write("Ctrl-O: Save // Ctrl-X: Exit instantly");
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;*/
+            if (!saved)
+            {
+                Console.SetCursorPosition(0, 24);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write("Ctrl-O: Save // Ctrl-X: Exit instantly");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Logger.Debug("Save file footer");
+                Console.SetCursorPosition(0, 24);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write("Saved file as " + fileName);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
 
-            Console.SetCursorPosition(cursorX, cursorY);
+            Console.SetCursorPosition(cursorX, cursorY + 1);
         }
 
         static void SaveFile(List<string> text, string filepath)
@@ -215,6 +263,7 @@ namespace GrapeFruit_CosmosRolling.nano
                         Logger.Debug($"{line}");
                     }
                     writer.Close();
+                    saveFileFooter = true;
                 }
                 else
                 {
@@ -228,6 +277,7 @@ namespace GrapeFruit_CosmosRolling.nano
                         Logger.Debug($"{line}");
                     }
                     writer.Close();
+                    saveFileFooter = true;
                 }
             }
             else
@@ -244,6 +294,7 @@ namespace GrapeFruit_CosmosRolling.nano
                             Logger.Debug($"{line}");
                         }
                         writer.Close();
+                        saveFileFooter = true;
                     }
                     else
                     {
@@ -257,6 +308,7 @@ namespace GrapeFruit_CosmosRolling.nano
                             Logger.Debug($"{line}");
                         }
                         writer.Close();
+                        saveFileFooter = true;
                     }
                 }
                 catch (FileNotFoundException)
@@ -274,6 +326,7 @@ namespace GrapeFruit_CosmosRolling.nano
                             Logger.Debug($"{line}");
                         }
                         writer.Close();
+                        saveFileFooter = true;
                     }
                     else
                     {
@@ -287,9 +340,15 @@ namespace GrapeFruit_CosmosRolling.nano
                             Logger.Debug($"{line}");
                         }
                         writer.Close();
+                        saveFileFooter = true;
                     }
                 }
             }
+
+        }
+
+        private static void CreateAndSave()
+        {
 
         }
 

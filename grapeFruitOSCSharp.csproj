@@ -6,21 +6,18 @@
         <Platform>cosmos</Platform>
         <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
         <SelfContained>True</SelfContained>
-        <Configurations>Debug;Release;ISO</Configurations>
     </PropertyGroup>
 
     <PropertyGroup>
         <EnableGDB>False</EnableGDB>
-        <StartCosmosGDB>True</StartCosmosGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-        <Launch>VMware</Launch>
+        <Launch>ISO</Launch>
         <Profile>VMware</Profile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
-        <TraceMode>All</TraceMode>
-        <VMWareEdition>Workstation</VMWareEdition>
-        <DebugEnabled>True</DebugEnabled>
+        <DebugEnabled>False</DebugEnabled>
         <CompileVBEMultiboot>False</CompileVBEMultiboot>
     </PropertyGroup>
 
@@ -28,6 +25,7 @@
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

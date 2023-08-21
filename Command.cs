@@ -13,7 +13,7 @@ namespace GrapeFruit_CosmosRolling
         public static void Main()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(Globals.currentuser + "@" + Globals.hostname + " > ");
+            Console.Write($"[{Globals.currentuser}@{Globals.hostname} {Globals.workingdir}]> ");
             Console.ForegroundColor = ConsoleColor.White;
             string command = Console.ReadLine();
             Process(command);
@@ -279,6 +279,7 @@ namespace GrapeFruit_CosmosRolling
                         return false;
 
                     default:
+                        Console.Write('\n');
                         goto redochoice;
                 }
             }
