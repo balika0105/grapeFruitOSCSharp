@@ -8,12 +8,13 @@ using Cosmos.System.FileSystem;
 using System.IO;
 using Cosmos.HAL;
 using System.Net.NetworkInformation;
+using Cosmos.Core;
 
 namespace GrapeFruit_CosmosRolling
 {
     public class Globals
     {
-        public const string build = "0.0.43 CosmosRolling";
+        public const string build = "0.0.5 CosmosRolling";
         public const string osname = "GrapeFruitOS-Cosmos";
         public const bool devBuild = true;
 
@@ -33,8 +34,24 @@ namespace GrapeFruit_CosmosRolling
         public static void printsysteminfo()
         {
             Console.WriteLine(osname + " " + build);
-            Console.WriteLine("Total memory: " + Cosmos.Core.GCImplementation.GetAvailableRAM() + "MB");
-            Console.WriteLine("Used memory: " + Cosmos.Core.GCImplementation.GetUsedRAM() + " bytes");
+            float usedpercent = 0f;
+            if (CPU.CanReadCPUID() != 0)
+            {
+                Console.WriteLine($"CPU: {CPU.GetCPUBrandString()}");
+                usedpercent = GCImplementation.GetUsedRAM() / (CPU.GetAmountOfRAM() * 1048576);
+            }
+            else
+            {
+                usedpercent = GCImplementation.GetUsedRAM() / (GCImplementation.GetAvailableRAM() * 1048576);
+            }
+            
+            string realUsedPercent = "";
+            if (usedpercent < 1)
+                realUsedPercent = "<1%";
+            else
+                realUsedPercent = usedpercent.ToString();
+            
+            Console.WriteLine($"Memory usage: {GCImplementation.GetUsedRAM()} / {GCImplementation.GetAvailableRAM() * 1048576} bytes ({realUsedPercent})");
         }
     }
 }

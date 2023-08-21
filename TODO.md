@@ -1,9 +1,10 @@
 ﻿# TO-DO List // Roadmap
 
 ### High priority
-- Text editor (nano, currently WIP)
+- Text editor (nano, currently WIP) *DONE*
 - Use *""* in file paths
 - Copy, move, delete commands (`cp`, `mv`, `rm`, including `rm -r`)
+	- `rm` now works without params
 - Networking tweaks
 
 ### Low priority, future plans

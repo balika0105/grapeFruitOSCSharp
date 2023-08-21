@@ -26,7 +26,7 @@ namespace GrapeFruit_CosmosRolling
                     path = Globals.workingdir + path;
 
                 string[] filePaths = Directory.GetFiles(path);
-                Console.WriteLine("Directory listing of {0}", path);
+                Console.WriteLine("\nDirectory listing of {0}", path);
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 foreach (var d in Directory.GetDirectories(path))
                 {
@@ -45,7 +45,7 @@ namespace GrapeFruit_CosmosRolling
                     Console.Write(Path.GetFileName(path_) + " ");
                 }
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("\nTotal: " + $"{Globals.drive.TotalSize}" + " b / Free: " + $"{Globals.drive.AvailableFreeSpace}" + " b");
+                Console.WriteLine("\nTotal: " + $"{Globals.drive.TotalSize}" + " b / Free: " + $"{Globals.drive.AvailableFreeSpace}" + " b\n");
             }
         }
 
