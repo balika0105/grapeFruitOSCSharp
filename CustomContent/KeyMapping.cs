@@ -7,7 +7,7 @@ namespace GrapeFruit_CosmosRolling
     /// <summary>
     /// Represents a customised keymapping from physical to virtual, Alt key can be used
     /// </summary>
-    public class CustomKeyMapping : Cosmos.System.KeyMapping
+    public class CustomKeyMapping : KeyMapping
     {
         /// <summary>
         /// The text character value of the key with the Alt

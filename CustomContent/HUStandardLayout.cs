@@ -17,7 +17,6 @@ namespace Cosmos.System.ScanMaps
         protected override void InitKeys()
         {
             Keys = new List<KeyMapping>(101);
-            //GrapeFruit_CosmosRolling.CustomKeyMapping cKeyMap;
 
             #region Keys
 
@@ -30,7 +29,9 @@ namespace Cosmos.System.ScanMaps
             Keys.Add(cKeyMap = new GrapeFruit_CosmosRolling.CustomKeyMapping(0x29, '1', '\'', '1', '~', ConsoleKeyEx.D1));
             Keys.Add(cKeyMap = new GrapeFruit_CosmosRolling.CustomKeyMapping(0x29, '2', '"', '2', 'ˇ', ConsoleKeyEx.D2));*/
 
-            Keys.Add(new KeyMapping(0x01, '0', '§', '0', '0', '0', '0', ConsoleKeyEx.D0));
+            Keys.Add(new GrapeFruit_CosmosRolling.CustomKeyMapping(0x01, '0', '§', '0', '0', ConsoleKeyEx.D0));
+
+            //Keys.Add(new KeyMapping(0x01, '0', '§', '0', '0', '0', '0', ConsoleKeyEx.D0));
             Keys.Add(new KeyMapping(0x02, '1', '\'', '1', '1', '1', '1', ConsoleKeyEx.D1));
             Keys.Add(new KeyMapping(0x03, '2', '\"', '2', '2', '2', '2', ConsoleKeyEx.D2));
             Keys.Add(new KeyMapping(0x04, '3', '+', '3', '^', '+', '3', '³', ConsoleKeyEx.D3));
@@ -47,7 +48,10 @@ namespace Cosmos.System.ScanMaps
             Keys.Add(new KeyMapping(0x0E, ConsoleKeyEx.Backspace));
             Keys.Add(new KeyMapping(0x0F, ConsoleKeyEx.Tab));
             /* qwertzuiopü+         QWERTZUIOPÜ*        @_€________~ */
-            Keys.Add(new KeyMapping(0x10, 'q', 'Q', 'q', '\\', 'q', 'Q', '@', ConsoleKeyEx.Q));
+            //Keys.Add(new KeyMapping(0x10, 'q', 'Q', 'q', '\\', 'q', 'Q', '@', ConsoleKeyEx.Q));
+            Keys.Add(new GrapeFruit_CosmosRolling.CustomKeyMapping(0x10, 'q', 'Q', 'Q', '\\', ConsoleKeyEx.Q));
+
+
             Keys.Add(new KeyMapping(0x11, 'w', 'W', 'w', '|', 'w', 'W', ConsoleKeyEx.W));
             Keys.Add(new KeyMapping(0x12, 'e', 'E', 'e', 'Ä', 'e', 'E', '€', ConsoleKeyEx.E));
             Keys.Add(new KeyMapping(0x13, 'r', 'R', 'r', 'R', 'r', 'R', ConsoleKeyEx.R));

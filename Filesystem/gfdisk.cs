@@ -1,0 +1,210 @@
+﻿using System;
+using System.Collections.Generic;
+using Cosmos.System.FileSystem.VFS;
+using Cosmos.System.FileSystem;
+using Cosmos.HAL.BlockDevice;
+using GrapeFruit_CosmosRolling;
+using Cosmos.HAL;
+
+namespace grapeFruitOSCSharp.Filesystem
+{
+    public class gfdisk
+    {
+        public static void main()
+        {
+            Console.Clear();
+            Console.WriteLine("GFDisk - GrapeFruit Disk Utility v0.1");
+            if (Globals.vFS == null)
+            {
+                Console.WriteLine("WARNING! Virtual Filesystem isn't initialised!");
+            }
+
+            do
+            {
+                Console.Write("gfdisk > ");
+
+            } while (Command(Console.ReadLine()));
+        }
+
+        static bool Command(string command)
+        {
+            switch (command)
+            {
+                case "getdisks":
+                    List<Disk> Disks = VFSManager.GetDisks();
+                    foreach (Disk disk in Disks)
+                    {
+                        disk.DisplayInformation();
+                    }
+                    Console.Write("\n");
+                    return true;
+
+                case "listvolumes":
+                    if (Globals.vFS != null)
+                    {
+                        var volumes = Globals.vFS.GetVolumes();
+
+                        foreach (var vol in volumes)
+                        {
+                            Console.WriteLine("  " + vol.mName + "\t   \t" + Globals.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("listvolumes: Virtual Filesystem isn't initialised");
+                    }
+                    
+                    return true;
+
+                case "devices":
+                    Logger.Log(1, "Looking for storage devices...");
+                    BlockDevice[] devices = BlockDevice.Devices.ToArray();
+                    foreach (BlockDevice device in devices)
+                    {
+                        Console.WriteLine("Blockdevice: " + device.ToString());
+                        Console.WriteLine(device.BlockCount + " blocks");
+                        Console.WriteLine(device.BlockSize + " bytes / block");
+                        Console.WriteLine("Type: " + device.Type.ToString());
+                    }
+                    return true;
+
+                case "format":
+                    format();
+                    return true;
+
+
+                case "help":
+                    Console.WriteLine("\nAvailable commands:");
+                    Console.WriteLine("getdisks: list disks");
+                    Console.WriteLine("listvolumes: list volumes on every disk (requires vFS init)");
+                    Console.WriteLine("devices: List blockdevices");
+                    Console.WriteLine("format: Enter formatting mode");
+                    Console.WriteLine();
+                    return true;
+
+                case "exit":
+                    return false;
+                default:
+                    Console.WriteLine("unknown");
+                    return true;
+            }
+        }
+
+        static void format()
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.WriteLine("gfdisk - formatting mode");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            Console.WriteLine("\nSelect device to format\n");
+
+            //Getting blockdevices
+            BlockDevice[] blockDevices = BlockDevice.Devices.ToArray();
+            for (int i = 0; i < blockDevices.Length; i++)
+            {
+                Console.WriteLine("Device #" + i);
+                Console.WriteLine("Blockdevice: " + blockDevices[i].ToString());
+                Console.WriteLine(blockDevices[i].BlockCount + " blocks");
+                Console.WriteLine(blockDevices[i].BlockSize + " bytes / block");
+                Console.WriteLine('\n');
+            }
+            Console.Write("Device? > ");
+            int selection = Convert.ToInt32(Console.ReadLine());
+
+            BlockDevice blockDevice = blockDevices[selection];
+
+            Disk disk = new Disk(blockDevice);
+
+            Console.WriteLine("The program will now format device #" + selection);
+            if (choice())
+            {
+                try
+                {
+                    int maxDiskSize = disk.Size;
+                    Console.Write($"\nNew partition size in bytes? ({maxDiskSize}) > ");
+                    int disksize = 0;
+                    if(Console.ReadLine() != "")
+                    {
+                        disksize = Convert.ToInt32(Console.ReadLine());
+                    }
+                    else
+                    {
+                        disksize = maxDiskSize;
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine("Formatting device, please wait...");
+
+                    Console.WriteLine("\nStage 1: deleting drive partitions...");
+                    disk.Clear();
+
+                    Console.WriteLine("\nStage 2: Creating new partition (on entire disk)");
+                    disk.CreatePartition(disksize);
+
+                    Console.WriteLine("\nStage 3: Format partition to FAT32");
+                    
+                    disk.FormatPartition(0, "FAT32", true);
+                }
+                catch(Exception e)
+                {
+                    ErrorScreen.SpecifiedError(e);
+                }
+                
+
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Formatting cancelled");
+                return;
+            }
+            
+        }
+
+        static bool choice()
+        {
+        redochoice:
+            Console.Write("Are you sure? (Y/n)");
+            if (!Globals.swapYZ)
+            {
+                switch (Console.ReadKey().Key)
+                {
+
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Y:
+                        return true;
+
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
+
+                    default:
+                        Console.Write('\n');
+                        goto redochoice;
+                }
+            }
+            else
+            {
+                switch (Console.ReadKey().Key)
+                {
+
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Z:
+                        return true;
+
+                    case ConsoleKey.N:
+                        Console.Write('\n');
+                        return false;
+
+                    default:
+                        Console.Write('\n');
+                        goto redochoice;
+                }
+            }
+        }
+    }
+}

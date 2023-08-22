@@ -1,6 +1,13 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-08-22
+- Introduced usage of the Prism API from [PrismOS](https://github.com/Project-Prism/Prism-OS)
+    - To fulfill the license terms of using the Prism API (as a part of PrismOS)
+      GrapeFruit OS is now available under the GPL 2.0 License
+- Started working on a GUI
+- Started working on an improved file system handling
+
 ### 2023-08-21
 - Updated to latest build of Cosmos
 - Created new project file to accomodate changes

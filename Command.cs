@@ -1,10 +1,6 @@
-﻿using Cosmos.System.FileSystem;
-using Cosmos.System.Network.Config;
+﻿using Cosmos.System.Network.Config;
+using grapeFruitOSCSharp.Filesystem;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GrapeFruit_CosmosRolling
 {
@@ -161,6 +157,10 @@ namespace GrapeFruit_CosmosRolling
                         Console.WriteLine("Not enough parameters");
                     break;
 
+                case "desktop":
+                    desktop();
+                    break;
+
                 default:
                     Console.WriteLine("gfsh> Unknown command");
                     break;
@@ -193,6 +193,7 @@ namespace GrapeFruit_CosmosRolling
                     Console.WriteLine("time - shows current time (RTC)");
                     Console.WriteLine("throwex - throws test exception");
                     Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
+                    Console.WriteLine("desktop - Enters desktop mode (IN DEVELOPMENT)");
                     Console.WriteLine("shutdown - turns off computer (asks for confirmation)");
                     Console.WriteLine("reboot - reboots computer (asks for confirmation)");
                     Console.WriteLine("whatis <command> - information about command");
@@ -297,8 +298,20 @@ namespace GrapeFruit_CosmosRolling
                         return false;
 
                     default:
+                        Console.Write('\n');
                         goto redochoice;
                 }
+            }
+        }
+        static void desktop()
+        {
+            Console.Clear();
+            Console.WriteLine("You will now enter the desktop mode.");
+            Console.WriteLine("The system has to be restarted to leave desktop mode");
+            if (choice())
+            {
+                Console.Clear();
+                Desktop.DesktopEnvironment.Init();
             }
         }
     }

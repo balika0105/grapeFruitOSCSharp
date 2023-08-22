@@ -1,17 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using Sys = Cosmos.System;
-
-using Cosmos.System.FileSystem;
 using System.IO;
-using System.Linq;
+using Cosmos.HAL;
+using GrapeFruit_CosmosRolling;
+using Cosmos.HAL.BlockDevice;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp.Filesystem
 {
     public class FS
     {
+        public static void LookForFileSystems()
+        {
+            
+            try
+            {
+                Logger.Log(1, "Looking for storage devices...");
+                BlockDevice[] devices = BlockDevice.Devices.ToArray();
+                foreach (BlockDevice device in devices)
+                {
+                    Console.WriteLine("Blockdevice: " + device.ToString() + '\n');
+                }
+                Logger.Log(1, "Looking for ISO9660 drives...");
+                
+            }
+            catch(Exception e)
+            {
+                ErrorScreen.SpecifiedError(e);
+            }
+            
+        }
         public static void List(string path = "")
         {
             if (Globals.vFS == null)
@@ -20,7 +38,7 @@ namespace GrapeFruit_CosmosRolling
             }
             else
             {
-                path = (path == "") ? Globals.workingdir : path;
+                path = path == "" ? Globals.workingdir : path;
 
                 if (path != "" && !path.Contains(@":\"))
                     path = Globals.workingdir + path;

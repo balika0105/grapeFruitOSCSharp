@@ -135,6 +135,11 @@ namespace GrapeFruit_CosmosRolling
                     Console.WriteLine("Removes file");
                     break;
 
+                case "desktop":
+                    Console.WriteLine("Usage: desktop");
+                    Console.WriteLine("Launches Desktop Mode (IN DEVELOPMENT!)");
+                    break;
+
                 default:
                     Console.WriteLine("Nothing appropriate");
                     break;

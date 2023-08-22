@@ -30,6 +30,7 @@ namespace GrapeFruit_CosmosRolling
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
+                case 1:
                 default:
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("INFO");
