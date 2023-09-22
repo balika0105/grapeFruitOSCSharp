@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-using Sys = Cosmos.System;
-
-using Cosmos.HAL.Drivers.Video;
-
-namespace GrapeFruit_CosmosRolling.nano
+namespace grapeFruitOSCSharp.nano
 {
-    public class nanomain
+    public class Nanomain
     {
         const string verNum = "0.3";
         static string fileName = "";
@@ -58,7 +54,6 @@ namespace GrapeFruit_CosmosRolling.nano
             }
 
             fileName = file;
-            Logger.Debug($"{file}");
 
 
             
@@ -89,15 +84,13 @@ namespace GrapeFruit_CosmosRolling.nano
                 {
                     case ConsoleKey.Enter:
                         // Insert a new line
-                        Logger.Debug("LF");
-                        text.Insert(cursorY + 1, text[cursorY].Substring(cursorX));
-                        text[cursorY] = text[cursorY].Substring(0, cursorX);
+                        text.Insert(cursorY + 1, text[cursorY][cursorX..]);
+                        text[cursorY] = text[cursorY][..cursorX];
                         cursorY++;
                         cursorX = 0;
                         break;
                     case ConsoleKey.Backspace:
                         // Delete the character to the left of the cursor
-                        Logger.Debug("BKSP");
                         if (cursorX > 0)
                         {
                             text[cursorY] = text[cursorY].Remove(cursorX - 1, 1);
@@ -113,7 +106,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         }
                         break;
                     case ConsoleKey.Delete:
-                        Logger.Debug("DEL");
                         // Delete the character at the cursor
                         if (cursorX < text[cursorY].Length)
                         {
@@ -127,7 +119,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.LeftArrow:
                         // Move the cursor left
-                        Logger.Debug("LeftArrow");
                         if (cursorX > 0)
                         {
                             cursorX--;
@@ -140,7 +131,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.RightArrow:
                         // Move the cursor right
-                        Logger.Debug("RightArrow");
                         if (cursorX < text[cursorY].Length)
                         {
                             cursorX++;
@@ -153,7 +143,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.UpArrow:
                         // Move the cursor up
-                        Logger.Debug("UpArrow");
                         if (cursorY > 0)
                         {
                             cursorY--;
@@ -162,7 +151,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.DownArrow:
                         // Move the cursor down
-                        Logger.Debug("DownArrow");
                         if (cursorY < text.Count - 1)
                         {
                             cursorY++;
@@ -171,7 +159,6 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.End:
                         //Move cursor to end of line
-                        Logger.Debug("End key");
                         if (cursorX < text[cursorY].Length)
                         {
                             cursorX = text[cursorY].Length;
@@ -179,16 +166,14 @@ namespace GrapeFruit_CosmosRolling.nano
                         break;
                     case ConsoleKey.Home:
                         //Move cursor to beginning of line
-                        Logger.Debug("Home key");
                         cursorX = 0;
                         break;
                     default:
                         if (key.KeyChar >= ' ')
                         {
                             // Insert a character at the cursor
-                            Logger.Debug("Insert char \'" + key.KeyChar + '\'');
                             string line = text[cursorY];
-                            text[cursorY] = line.Substring(0, cursorX) + key.KeyChar + line.Substring(cursorX);
+                            text[cursorY] = line[..cursorX] + key.KeyChar + line[cursorX..];
                             cursorX++;
                             /*selectionStartX = cursorX;
                             selectionStartY = cursorY;*/
@@ -202,7 +187,6 @@ namespace GrapeFruit_CosmosRolling.nano
 
         static void Render(List<string> text, int cursorX, int cursorY, bool saved = false)
         {
-            Logger.Debug("Render");
             Console.Clear();
             //Writing window header
             Console.SetCursorPosition(0, 0);
@@ -232,7 +216,6 @@ namespace GrapeFruit_CosmosRolling.nano
             }
             else
             {
-                Logger.Debug("Save file footer");
                 Console.SetCursorPosition(0, 24);
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
@@ -246,8 +229,6 @@ namespace GrapeFruit_CosmosRolling.nano
 
         static void SaveFile(List<string> text, string filepath)
         {
-            Logger.Debug("SaveFile");
-            Logger.Debug($"{filepath}");
             if (filepath == "")
             {
                 Console.Clear();
@@ -256,11 +237,10 @@ namespace GrapeFruit_CosmosRolling.nano
                 if (File.Exists(fileName))
                 {
                     Logger.Debug("save file as " + fileName);
-                    StreamWriter writer = new StreamWriter(fileName);
+                    StreamWriter writer = new(fileName);
                     foreach (string line in text)
                     {
                         writer.WriteLine(line);
-                        Logger.Debug($"{line}");
                     }
                     writer.Close();
                     saveFileFooter = true;
@@ -270,11 +250,10 @@ namespace GrapeFruit_CosmosRolling.nano
                     Logger.Debug("create & save file as " + fileName);
 
                     File.Create(fileName).Close();
-                    StreamWriter writer = new StreamWriter(fileName);
+                    StreamWriter writer = new(fileName);
                     foreach (string line in text)
                     {
                         writer.WriteLine(line);
-                        Logger.Debug($"{line}");
                     }
                     writer.Close();
                     saveFileFooter = true;
@@ -287,11 +266,10 @@ namespace GrapeFruit_CosmosRolling.nano
                     if (File.Exists(filepath))
                     {
                         Logger.Debug("save file as " + filepath);
-                        StreamWriter writer = new StreamWriter(filepath);
+                        StreamWriter writer = new(filepath);
                         foreach (string line in text)
                         {
                             writer.WriteLine(line);
-                            Logger.Debug($"{line}");
                         }
                         writer.Close();
                         saveFileFooter = true;
@@ -301,11 +279,10 @@ namespace GrapeFruit_CosmosRolling.nano
                         Logger.Debug("create & save file as " + filepath);
 
                         File.Create(filepath).Close();
-                        StreamWriter writer = new StreamWriter(filepath);
+                        StreamWriter writer = new(filepath);
                         foreach (string line in text)
                         {
                             writer.WriteLine(line);
-                            Logger.Debug($"{line}");
                         }
                         writer.Close();
                         saveFileFooter = true;
@@ -319,11 +296,10 @@ namespace GrapeFruit_CosmosRolling.nano
                     if (File.Exists(fileName))
                     {
                         Logger.Debug("save file as " + fileName);
-                        StreamWriter writer = new StreamWriter(fileName);
+                        StreamWriter writer = new(fileName);
                         foreach (string line in text)
                         {
                             writer.WriteLine(line);
-                            Logger.Debug($"{line}");
                         }
                         writer.Close();
                         saveFileFooter = true;
@@ -333,11 +309,10 @@ namespace GrapeFruit_CosmosRolling.nano
                         Logger.Debug("create & save file as " + fileName);
 
                         File.Create(fileName).Close();
-                        StreamWriter writer = new StreamWriter(fileName);
+                        StreamWriter writer = new(fileName);
                         foreach (string line in text)
                         {
                             writer.WriteLine(line);
-                            Logger.Debug($"{line}");
                         }
                         writer.Close();
                         saveFileFooter = true;
@@ -347,16 +322,11 @@ namespace GrapeFruit_CosmosRolling.nano
 
         }
 
-        private static void CreateAndSave()
-        {
-
-        }
-
         static List<string> LoadFile(string path)
         {
             Logger.Debug("LoadFile");
             Logger.Debug($"Path: {path}");
-            List<string> temp = new List<string>();
+            List<string> temp = new();
             string[] fileContent = File.ReadAllLines(path);
 
             foreach (string line in fileContent)

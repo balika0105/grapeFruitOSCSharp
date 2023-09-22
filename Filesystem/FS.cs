@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sys = Cosmos.System;
 using System.IO;
-using Cosmos.HAL;
-using GrapeFruit_CosmosRolling;
 using Cosmos.HAL.BlockDevice;
 
 namespace grapeFruitOSCSharp.Filesystem
@@ -86,7 +83,7 @@ namespace grapeFruitOSCSharp.Filesystem
                         File.Create(filename);
 
                         //Adding a zero character to the file, so nano doesn't crash when opening it
-                        StreamWriter writer = new StreamWriter(filename);
+                        StreamWriter writer = new(filename);
                         writer.Write('\0');
                         writer.Close();
                     }
@@ -159,7 +156,7 @@ namespace grapeFruitOSCSharp.Filesystem
                     //We can't do this:
                     //splitpath = splitpath.SkipLast(1).ToArray();
                     //so instead we'll convert it by hand
-                    List<string> temp = new List<string>();
+                    List<string> temp = new();
                     for (int i = 0; i < splitpath.Length - 2; i++)
                         temp.Add(splitpath[i]);
 

@@ -5,10 +5,12 @@ using System.IO;
 using Cosmos.HAL;
 using Cosmos.Core;
 using Cosmos.System.FileSystem.FAT;
-using System.Net.NetworkInformation;
 using Cosmos.System.FileSystem.ISO9660;
 
-namespace GrapeFruit_CosmosRolling
+#pragma warning disable CA2211
+#pragma warning disable IDE0059
+
+namespace grapeFruitOSCSharp
 {
     public class Globals
     {
@@ -48,7 +50,7 @@ namespace GrapeFruit_CosmosRolling
                     "////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////w==");
 
 
-        public static void printsysteminfo()
+        public static void Printsysteminfo()
         {
             Console.WriteLine(osname + " " + build);
             float usedpercent = 0f;

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Mandb
     {
-        public static void man(string command)
+        public static void Man(string command)
         {
             //"""""mandb"""""
             switch (command)

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
-using System.Threading.Tasks;
+
 
 using Sys = Cosmos.System;
 
@@ -12,7 +11,7 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4.TCP;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class GrapeFruitNW
     {
@@ -25,20 +24,18 @@ namespace GrapeFruit_CosmosRolling
             else
             {
                 Logger.Debug("DHCPDiscovery called");
-                using (var xClient = new DHCPClient())
-                {
-                    Logger.Debug("using xClient DHCP");
-                    /** Send a DHCP Discover packet **/
-                    //This will automatically set the IP config after DHCP response
-                    if (xClient.SendDiscoverPacket() > -1)
-                        Logger.Log(1, "IP Set with DHCP: " + NetworkConfiguration.CurrentAddress.ToString());
-                    else
-                        Logger.Log(2, "Failed to set IP with DHCP");
-                }
+                using var xClient = new DHCPClient();
+                Logger.Debug("using xClient DHCP");
+                /** Send a DHCP Discover packet **/
+                //This will automatically set the IP config after DHCP response
+                if (xClient.SendDiscoverPacket() > -1)
+                    Logger.Log(1, "IP Set with DHCP: " + NetworkConfiguration.CurrentAddress.ToString());
+                else
+                    Logger.Log(2, "Failed to set IP with DHCP");
             }
         }
 
-        public static void ping(string address)
+        public static void Ping(string address)
         {
             if (Globals.nic == null)
             {
@@ -51,7 +48,7 @@ namespace GrapeFruit_CosmosRolling
 
                 using (var xClient = new ICMPClient())
                 {
-                    Sys.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                    EndPoint endPoint = new (Address.Zero, 0);
                     xClient.Connect(Address.Parse(address));
 
                     for (int i = 0; i < 4; i++)
@@ -76,7 +73,7 @@ namespace GrapeFruit_CosmosRolling
             }
         }
 
-        static void ping(Address address)
+        static void Ping(Address address)
         {
             if (Globals.nic == null)
             {
@@ -89,7 +86,7 @@ namespace GrapeFruit_CosmosRolling
 
                 using (var xClient = new ICMPClient())
                 {
-                    Sys.Network.IPv4.EndPoint endPoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                    EndPoint endPoint = new(Address.Zero, 0);
                     xClient.Connect(address);
 
                     for (int i = 0; i < 4; i++)
@@ -114,7 +111,7 @@ namespace GrapeFruit_CosmosRolling
             }
         }
 
-        public static void dnsping(string address)
+        public static void Dnsping(string address)
         {
             if (Globals.nic == null)
             {
@@ -125,14 +122,14 @@ namespace GrapeFruit_CosmosRolling
                 Logger.Debug("Called DNSPing, attempting to ping " + address);
                 Console.WriteLine("Pinging " + address);
                 #region Resolving DNS
-                Address destination = dnsresolve(address);
+                Address destination = Dnsresolve(address);
                 #endregion
                 Console.WriteLine(address + " resolved to " + destination.ToString());
-                ping(destination);
+                Ping(destination);
             }
         }
 
-        public static void http(string url)
+        public static void Http(string url)
         {
             if (Globals.nic == null)
             {
@@ -140,31 +137,29 @@ namespace GrapeFruit_CosmosRolling
             }
             else
             {
-                using (var xClient = new TcpClient(80))
+                using var xClient = new TcpClient(80);
+                //Resolving domain to IPv4
+                Address destination = Dnsresolve(url);
+                xClient.Connect(destination, 80);
+
+                //Sending a HTTP request
+                string message = "POST / HTTP/1.1\nHost: localhost:80\nUser-Agent: httpCommand/0.1 (GrapeFruit)\nAccept: text/html\nAccept-Language: en-US,en;q=0.5\nConnection: keep-alive";
+                xClient.Send(Encoding.ASCII.GetBytes(message));
+
+                //Receiving data
+                var endpoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                var data = xClient.Receive(ref endpoint);
+                var data2 = xClient.NonBlockingReceive(ref endpoint);
+
+                Console.WriteLine("Received data as follows: ");
+                foreach (byte item in data2)
                 {
-                    //Resolving domain to IPv4
-                    Address destination = dnsresolve(url);
-                    xClient.Connect(destination, 80);
-
-                    //Sending a HTTP request
-                    string message = "POST / HTTP/1.1\nHost: localhost:80\nUser-Agent: httpCommand/0.1 (GrapeFruit)\nAccept: text/html\nAccept-Language: en-US,en;q=0.5\nConnection: keep-alive";
-                    xClient.Send(Encoding.ASCII.GetBytes(message));
-
-                    //Receiving data
-                    var endpoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
-                    var data = xClient.Receive(ref endpoint);
-                    var data2 = xClient.NonBlockingReceive(ref endpoint);
-
-                    Console.WriteLine("Received data as follows: ");
-                    foreach (byte item in data2)
-                    {
-                        Console.Write(item);
-                    }
+                    Console.Write(item);
                 }
             }
         }
 
-        static Address dnsresolve(string address)
+        static Address Dnsresolve(string address)
         {
             #region Resolving DNS
             Address destination;
@@ -183,7 +178,7 @@ namespace GrapeFruit_CosmosRolling
             #endregion
             return destination;
         }
-        public static void resolvedns(string address)
+        public static void Resolvedns(string address)
         {
             if (Globals.nic == null)
             {
@@ -191,7 +186,7 @@ namespace GrapeFruit_CosmosRolling
             }
             else
             {
-                Address server = dnsresolve(address);
+                Address server = Dnsresolve(address);
                 Console.WriteLine(address + " resolved to " + server.ToString());
             }
         }

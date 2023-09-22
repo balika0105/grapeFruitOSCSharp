@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using Cosmos.System.FileSystem.VFS;
 using Cosmos.System.FileSystem;
 using Cosmos.HAL.BlockDevice;
-using GrapeFruit_CosmosRolling;
-using Cosmos.HAL;
 
 namespace grapeFruitOSCSharp.Filesystem
 {
-    public class gfdisk
+    public class Gfdisk
     {
-        public static void main()
+        public static void Main()
         {
             Console.Clear();
             Console.WriteLine("GFDisk - GrapeFruit Disk Utility v0.1");
@@ -69,7 +67,7 @@ namespace grapeFruitOSCSharp.Filesystem
                     return true;
 
                 case "format":
-                    format();
+                    Format();
                     return true;
 
 
@@ -90,7 +88,7 @@ namespace grapeFruitOSCSharp.Filesystem
             }
         }
 
-        static void format()
+        static void Format()
         {
             Console.Clear();
 
@@ -117,10 +115,10 @@ namespace grapeFruitOSCSharp.Filesystem
 
             BlockDevice blockDevice = blockDevices[selection];
 
-            Disk disk = new Disk(blockDevice);
+            Disk disk = new(blockDevice);
 
             Console.WriteLine("The program will now format device #" + selection);
-            if (choice())
+            if (Choice())
             {
                 try
                 {
@@ -165,7 +163,7 @@ namespace grapeFruitOSCSharp.Filesystem
             
         }
 
-        static bool choice()
+        static bool Choice()
         {
         redochoice:
             Console.Write("Are you sure? (Y/n)");

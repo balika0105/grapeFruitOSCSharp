@@ -5,7 +5,7 @@ using Cosmos.System.Graphics;
 using System.Drawing;
 using Cosmos.System.Graphics.Fonts;
 
-namespace GrapeFruit_CosmosRolling.Desktop
+namespace grapeFruitOSCSharp.Desktop
 {
     public class DesktopEnvironment
     {

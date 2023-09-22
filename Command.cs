@@ -1,8 +1,8 @@
 ﻿using Cosmos.System.Network.Config;
-using grapeFruitOSCSharp.Filesystem;
 using System;
+using grapeFruitOSCSharp.Filesystem;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Command
     {
@@ -23,7 +23,7 @@ namespace GrapeFruit_CosmosRolling
             switch (splitinput[0])
             {
                 case "echo":
-                    echo(splitinput);
+                    Echo(splitinput);
                     break;
 
                 case "clear":
@@ -33,26 +33,26 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "time":
-                    time();
+                    Time();
                     break;
 
                 case "help":
                 case "commands":
                     if (splitinput.Length > 1)
-                        commands(splitinput[1]);
+                        Commands(splitinput[1]);
                     else
-                        commands();
+                        Commands();
                     break;
 
                 case "throwex":
                     throw new Exception("Manually triggered exception");
 
                 case "shutdown":
-                    shutdown();
+                    Shutdown();
                     break;
 
                 case "reboot":
-                    reboot();
+                    Reboot();
                     break;
 
                 case "ls":
@@ -97,19 +97,19 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "gfdisk":
-                    gfdisk.main();
+                    Gfdisk.Main();
                     break;
 
                 case "ping":
                     if (splitinput.Length > 1)
-                        GrapeFruitNW.ping(splitinput[1]);
+                        GrapeFruitNW.Ping(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
                 case "dnsping":
                     if (splitinput.Length > 1)
-                        GrapeFruitNW.dnsping(splitinput[1]);
+                        GrapeFruitNW.Dnsping(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
@@ -122,19 +122,19 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "http":
-                    GrapeFruitNW.http(splitinput[1]);
+                    GrapeFruitNW.Http(splitinput[1]);
                     break;
 
                 case "resolvedns":
                     if(splitinput.Length > 1)
-                        GrapeFruitNW.resolvedns(splitinput[1]);
+                        GrapeFruitNW.Resolvedns(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
                 case "whatis":
                     if (splitinput.Length > 1)
-                        Mandb.man(splitinput[1]);
+                        Mandb.Man(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
@@ -145,9 +145,9 @@ namespace GrapeFruit_CosmosRolling
 
                 case "nano":
                     if (splitinput.Length > 1)
-                        nano.nanomain.Main(splitinput[1]);
+                        nano.Nanomain.Main(splitinput[1]);
                     else
-                        nano.nanomain.Main();
+                        nano.Nanomain.Main();
                     break;
 
                 case "rm":
@@ -164,7 +164,7 @@ namespace GrapeFruit_CosmosRolling
         }
 
         //Always add every command here
-        static void commands(string category = "")
+        static void Commands(string category = "")
         {
             switch (category)
             {
@@ -222,7 +222,7 @@ namespace GrapeFruit_CosmosRolling
             
         }
 
-        static void echo(string[] input)
+        static void Echo(string[] input)
         {
             string output = "";
             for (int i = 1; i < input.Length; i++)
@@ -232,32 +232,32 @@ namespace GrapeFruit_CosmosRolling
             Console.WriteLine(output);
         }
 
-        static void time()
+        static void Time()
         {
             string timeout_ = Cosmos.HAL.RTC.Year.ToString() + '/' + Cosmos.HAL.RTC.Month.ToString() + '/' + Cosmos.HAL.RTC.DayOfTheMonth.ToString() + ' ' + Cosmos.HAL.RTC.Hour.ToString() + ':' + Cosmos.HAL.RTC.Minute.ToString() + ':' + Cosmos.HAL.RTC.Second.ToString();
 
             Console.WriteLine(timeout_);
         }
 
-        static void shutdown()
+        static void Shutdown()
         {
             //choice
-            if (choice())
+            if (Choice())
             {
                 Cosmos.System.Power.Shutdown();
             }
         }
 
-        static void reboot()
+        static void Reboot()
         {
             //choice
-            if (choice())
+            if (Choice())
             {
                 Cosmos.System.Power.Reboot();
             }
         }
 
-        static bool choice()
+        static bool Choice()
         {
             redochoice:
             Console.Write("Are you sure? (Y/n)");
