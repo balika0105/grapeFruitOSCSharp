@@ -4,16 +4,13 @@ using Cosmos.System;
 using Cosmos.System.Graphics;
 using System.Drawing;
 using Cosmos.System.Graphics.Fonts;
-using Cosmos.HAL;
-using Cosmos.Core;
 
 namespace GrapeFruit_CosmosRolling.Desktop
 {
     public class DesktopEnvironment
     {
-        static byte[] fontData = Globals.fontData;
-        static List<UnicodeMapping> mappings = new List<UnicodeMapping>();
-        static PCScreenFont font;
+        static readonly byte[] fontData = Globals.fontData;
+        static readonly List<UnicodeMapping> mappings = new();
 
         static VGACanvas vgaCanvas;
 
@@ -32,14 +29,14 @@ namespace GrapeFruit_CosmosRolling.Desktop
             };
 
             mappings.Add(mapping);
-
-            byte mode = fontData[2];
             byte charHeight = fontData[3];
             byte charWidth = 8;
             #endregion
-            vgaCanvas = new VGACanvas();
-            vgaCanvas.Mode = new Mode(640, 480, ColorDepth.ColorDepth4);
-            PCScreenFont font = new PCScreenFont(charWidth, charHeight, fontData, mappings);
+            vgaCanvas = new VGACanvas
+            {
+                Mode = new Mode(640, 480, ColorDepth.ColorDepth4)
+            };
+            PCScreenFont font = new(charWidth, charHeight, fontData, mappings);
             vgaCanvas.Clear(Color.DarkBlue);
             vgaCanvas.DrawString("GrapeFruitOS Graphics Mode", font, Color.White, 0, 0);
             RenderLoop();
@@ -51,11 +48,6 @@ namespace GrapeFruit_CosmosRolling.Desktop
             Logger.Debug("Start graphics render loop");
 
             bool run = true;
-
-            /*INTs.IRQContext context = new INTs.IRQContext();
-            PS2Mouse ps2Mouse = new PS2Mouse();
-            ps2Mouse.HandleMouse(ref context);*/
-
 
             while (run)
             {

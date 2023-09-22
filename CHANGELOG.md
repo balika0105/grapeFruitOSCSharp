@@ -1,6 +1,11 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-09-22
+- Removed PrismAPI due to not being able to use it *(lots of error messages, unsafe code etc.)*
+- Only pushing code changes to make it visible to public to help fix issues
+- Fixes to be expected later
+
 ### 2023-08-22
 - Introduced usage of the Prism API from [PrismOS](https://github.com/Project-Prism/Prism-OS)
     - To fulfill the license terms of using the Prism API (as a part of PrismOS)

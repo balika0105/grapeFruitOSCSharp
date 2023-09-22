@@ -21,23 +21,15 @@
         <CompileVBEMultiboot>False</CompileVBEMultiboot>
         <TraceMode>All</TraceMode>
         <VMWareEdition>Player</VMWareEdition>
+        <RemoveBootDebugOutput>False</RemoveBootDebugOutput>
+        <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Compile Remove="Extensions\PrismAPI\**" />
-      <EmbeddedResource Remove="Extensions\PrismAPI\**" />
-      <None Remove="Extensions\PrismAPI\**" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

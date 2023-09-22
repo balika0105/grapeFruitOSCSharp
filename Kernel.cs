@@ -119,9 +119,9 @@ namespace GrapeFruit_CosmosRolling
             }
 
             //Extented ASCII
-            /*Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             Console.InputEncoding = Encoding.GetEncoding(437);
-            Console.OutputEncoding = Encoding.GetEncoding(437);*/
+            Console.OutputEncoding = Encoding.GetEncoding(437);
             //Set screen size
             VGAScreen.SetTextMode(VGADriver.TextSize.Size80x25);
 
