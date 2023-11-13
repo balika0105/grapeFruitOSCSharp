@@ -1,10 +1,10 @@
 ﻿# TO-DO List // Roadmap
 
 ### High priority
-- Text editor (nano, currently WIP) *DONE*
-- Use *""* in file paths
+- Support for *REAL* FAT32 (hard drives) and ISO9660 (optical discs)
+- Use *""* in file paths ✅
 - Copy, move, delete commands (`cp`, `mv`, `rm`, including `rm -r`)
-	- `rm` now works without params
+	- `cp˙`, `mv` and `rm` works, but `rm` cannot do recursive delete ✅
 - Networking tweaks
 
 ### Low priority, future plans

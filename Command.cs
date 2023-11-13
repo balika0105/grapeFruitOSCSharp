@@ -1,12 +1,9 @@
-﻿using Cosmos.System.FileSystem;
-using Cosmos.System.Network.Config;
+﻿using Cosmos.System.Network.Config;
 using System;
+using grapeFruitOSCSharp.Filesystem;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Command
     {
@@ -16,18 +13,50 @@ namespace GrapeFruit_CosmosRolling
             Console.Write($"[{Globals.currentuser}@{Globals.hostname} {Globals.workingdir}]> ");
             Console.ForegroundColor = ConsoleColor.White;
             string command = Console.ReadLine();
-            Process(command);
+            ParseInput(command);
 
         }
 
-        static void Process(string input)
+        private static void ParseInput(string input)
         {
-            //Splitting input to words
-            string[] splitinput = input.Split(' ');
+            List<string> arguments = new List<string>();
+            bool insideQuotes = false;
+            int start = 0;
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '"')
+                {
+                    insideQuotes = !insideQuotes;
+                }
+
+                if (input[i] == ' ' && !insideQuotes)
+                {
+                    // If not inside quotes, add the current part to the list
+                    arguments.Add(input.Substring(start, i - start));
+                    start = i + 1; // Move the start index to the next character
+                }
+            }
+
+            // Add the last part (or the only part if there are no spaces)
+            arguments.Add(input.Substring(start));
+
+            //Force trimming quotes from every damn entry
+            //Not elegant and probably not effective
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                arguments[i] = arguments[i].Trim('"');
+            }
+
+            Process(arguments);
+        }
+
+        static void Process(List<string> splitinput)
+        {
             switch (splitinput[0])
             {
                 case "echo":
-                    echo(splitinput);
+                    Echo(splitinput);
                     break;
 
                 case "clear":
@@ -37,41 +66,42 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "time":
-                    time();
+                    Time();
                     break;
 
                 case "help":
                 case "commands":
-                    if (splitinput.Length > 1)
-                        commands(splitinput[1]);
+                    if (splitinput.Count > 1)
+                        Commands(splitinput[1]);
                     else
-                        commands();
+                        Commands();
                     break;
 
                 case "throwex":
-                    throw new ArgumentOutOfRangeException();
+                    throw new Exception("Manually triggered exception");
 
                 case "shutdown":
-                    shutdown();
+                    Shutdown();
                     break;
 
                 case "reboot":
-                    reboot();
+                    Reboot();
                     break;
 
                 case "ls":
                 case "dir":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.List(splitinput[1]);
                     else
                         FS.List();
                     break;
 
                 case "cd":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.Chdir(splitinput[1]);
                     else
-                        Console.WriteLine("Not enough parameters");
+                        //Switching back to FS Root
+                        FS.Chdir(@"0:\");
                     break;
 
                 case "pwd":
@@ -79,14 +109,14 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "touch":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.Touch(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
                 case "cat":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.Cat(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
@@ -94,26 +124,42 @@ namespace GrapeFruit_CosmosRolling
 
                 case "mkdir":
                 case "md":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.Mkdir(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
+                case "copy":
+                case "cp":
+                    if (splitinput.Count > 2)
+                        FS.Copy(splitinput[1], splitinput[2]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "move":
+                case "mv":
+                    if (splitinput.Count > 2)
+                        FS.Move(splitinput[1], splitinput[2]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
                 case "gfdisk":
-                    gfdisk.main();
+                    Gfdisk.Main();
                     break;
 
                 case "ping":
-                    if (splitinput.Length > 1)
-                        GrapeFruitNW.ping(splitinput[1]);
+                    if (splitinput.Count > 1)
+                        GrapeFruitNW.Ping(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
                 case "dnsping":
-                    if (splitinput.Length > 1)
-                        GrapeFruitNW.dnsping(splitinput[1]);
+                    if (splitinput.Count > 1)
+                        GrapeFruitNW.Dnsping(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
@@ -126,19 +172,19 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "http":
-                    GrapeFruitNW.http(splitinput[1]);
+                    GrapeFruitNW.Http(splitinput[1]);
                     break;
 
                 case "resolvedns":
-                    if(splitinput.Length > 1)
-                        GrapeFruitNW.resolvedns(splitinput[1]);
+                    if(splitinput.Count > 1)
+                        GrapeFruitNW.Resolvedns(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
 
                 case "whatis":
-                    if (splitinput.Length > 1)
-                        Mandb.man(splitinput[1]);
+                    if (splitinput.Count > 1)
+                        Mandb.Man(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
                     break;
@@ -148,14 +194,14 @@ namespace GrapeFruit_CosmosRolling
                     break;
 
                 case "nano":
-                    if (splitinput.Length > 1)
-                        nano.nanomain.Main(splitinput[1]);
+                    if (splitinput.Count > 1)
+                        nano.Nanomain.Main(splitinput[1]);
                     else
-                        nano.nanomain.Main();
+                        nano.Nanomain.Main();
                     break;
 
                 case "rm":
-                    if (splitinput.Length > 1)
+                    if (splitinput.Count > 1)
                         FS.Remove(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
@@ -168,7 +214,7 @@ namespace GrapeFruit_CosmosRolling
         }
 
         //Always add every command here
-        static void commands(string category = "")
+        static void Commands(string category = "")
         {
             switch (category)
             {
@@ -214,6 +260,8 @@ namespace GrapeFruit_CosmosRolling
                     Console.WriteLine("touch <filename> - create empty file with specified name");
                     Console.WriteLine("cat <filename> - print file contents");
                     Console.WriteLine("mkdir/md <name> - creates directory with name");
+                    Console.WriteLine("copy/cp <source> <target> - copies file from source to target (if source exists)");
+                    Console.WriteLine("move/mv <source> <target> - moves file from source to target (if source exists)");
                     Console.WriteLine("gfdisk - disk utility");
                     Console.WriteLine("nano <filename> - text editor");
                     break;
@@ -226,42 +274,42 @@ namespace GrapeFruit_CosmosRolling
             
         }
 
-        static void echo(string[] input)
+        static void Echo(List<string> input)
         {
             string output = "";
-            for (int i = 1; i < input.Length; i++)
+            foreach (string line in input)
             {
-                output += input[i] + ' ';
+                output += line + ' ';
             }
             Console.WriteLine(output);
         }
 
-        static void time()
+        static void Time()
         {
             string timeout_ = Cosmos.HAL.RTC.Year.ToString() + '/' + Cosmos.HAL.RTC.Month.ToString() + '/' + Cosmos.HAL.RTC.DayOfTheMonth.ToString() + ' ' + Cosmos.HAL.RTC.Hour.ToString() + ':' + Cosmos.HAL.RTC.Minute.ToString() + ':' + Cosmos.HAL.RTC.Second.ToString();
 
             Console.WriteLine(timeout_);
         }
 
-        static void shutdown()
+        static void Shutdown()
         {
             //choice
-            if (choice())
+            if (Choice())
             {
                 Cosmos.System.Power.Shutdown();
             }
         }
 
-        static void reboot()
+        static void Reboot()
         {
             //choice
-            if (choice())
+            if (Choice())
             {
                 Cosmos.System.Power.Reboot();
             }
         }
 
-        static bool choice()
+        static bool Choice()
         {
             redochoice:
             Console.Write("Are you sure? (Y/n)");
@@ -297,6 +345,7 @@ namespace GrapeFruit_CosmosRolling
                         return false;
 
                     default:
+                        Console.Write('\n');
                         goto redochoice;
                 }
             }

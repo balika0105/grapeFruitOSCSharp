@@ -1,6 +1,24 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-11-13
+- Added `cp` and `mv` commands
+    - Added `whatis` and `help` entry
+- Shell finally supports input with quotation marks (`"`)
+- Changed version number to 0.6
+
+### 2023-09-22
+- Removed PrismAPI due to not being able to use it *(lots of error messages, unsafe code etc.)*
+- Only pushing code changes to make it visible to public to help fix issues
+- Fixes to be expected later
+
+### 2023-08-22
+- Introduced usage of the Prism API from [PrismOS](https://github.com/Project-Prism/Prism-OS)
+    - To fulfill the license terms of using the Prism API (as a part of PrismOS)
+      GrapeFruit OS is now available under the GPL 2.0 License
+- Started working on a GUI
+- Started working on an improved file system handling
+
 ### 2023-08-21
 - Updated to latest build of Cosmos
 - Created new project file to accomodate changes

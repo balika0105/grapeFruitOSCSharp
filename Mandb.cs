@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Mandb
     {
-        public static void man(string command)
+        public static void Man(string command)
         {
             //"""""mandb"""""
             switch (command)
@@ -82,6 +78,18 @@ namespace GrapeFruit_CosmosRolling
                     Console.WriteLine("If there are \\-s included, it will create a new directory at the path");
                     break;
 
+                case "copy":
+                case "cp":
+                    Console.WriteLine("Usage: copy/cp <source> <target>");
+                    Console.WriteLine("Copies a file to the specified target");
+                    break;
+
+                case "move":
+                case "mv":
+                    Console.WriteLine("Usage: move/mv <source> <target>");
+                    Console.WriteLine("Moves a file to the specified target");
+                    break;
+
                 case "gfdisk":
                     Console.WriteLine("Usage: gfdisk");
                     Console.WriteLine("Launches GrapeFruit Disk Utility");
@@ -133,6 +141,11 @@ namespace GrapeFruit_CosmosRolling
                 case "rm":
                     Console.WriteLine("Usage: rm <file path>");
                     Console.WriteLine("Removes file");
+                    break;
+
+                case "desktop":
+                    Console.WriteLine("Usage: desktop");
+                    Console.WriteLine("Launches Desktop Mode (IN DEVELOPMENT!)");
                     break;
 
                 default:

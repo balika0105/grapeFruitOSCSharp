@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Text;
 using Sys = Cosmos.System;
-
 using Cosmos.System.FileSystem;
 using System.IO;
 using Cosmos.System.Graphics;
 using Cosmos.HAL.Drivers.Video;
 using Cosmos.System.ExtendedASCII;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Kernel : Sys.Kernel
     {
@@ -119,9 +118,9 @@ namespace GrapeFruit_CosmosRolling
             }
 
             //Extented ASCII
-            /*Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             Console.InputEncoding = Encoding.GetEncoding(437);
-            Console.OutputEncoding = Encoding.GetEncoding(437);*/
+            Console.OutputEncoding = Encoding.GetEncoding(437);
             //Set screen size
             VGAScreen.SetTextMode(VGADriver.TextSize.Size80x25);
 
@@ -138,7 +137,7 @@ namespace GrapeFruit_CosmosRolling
             Console.Write("\n\n");
             #endregion
             //Print system data
-            Globals.printsysteminfo();
+            Globals.Printsysteminfo();
             Logger.Debug("Calling Run()");
         }
 

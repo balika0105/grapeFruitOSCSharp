@@ -1,7 +1,7 @@
 ﻿using Cosmos.System.ScanMaps;
 using System;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class KBManager
     {

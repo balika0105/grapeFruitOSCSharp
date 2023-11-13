@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitOSCSharp
 {
     public class Logger
     {
@@ -30,6 +26,7 @@ namespace GrapeFruit_CosmosRolling
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
+                case 1:
                 default:
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("INFO");
