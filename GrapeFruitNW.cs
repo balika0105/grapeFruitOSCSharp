@@ -15,6 +15,7 @@ namespace grapeFruitOSCSharp
 {
     public class GrapeFruitNW
     {
+        static Address LocalIP = new Address(127, 0, 0, 1);
         public static void DHCPDiscovery()
         {
             if (Globals.nic == null)
@@ -137,17 +138,18 @@ namespace grapeFruitOSCSharp
             }
             else
             {
-                using var xClient = new TcpClient(80);
+                
                 //Resolving domain to IPv4
                 Address destination = Dnsresolve(url);
-                xClient.Connect(destination, 80);
+                using var xClient = new TcpClient(destination, 80);
+                //xClient.Connect(destination, 80);
 
                 //Sending a HTTP request
                 string message = "POST / HTTP/1.1\nHost: localhost:80\nUser-Agent: httpCommand/0.1 (GrapeFruit)\nAccept: text/html\nAccept-Language: en-US,en;q=0.5\nConnection: keep-alive";
                 xClient.Send(Encoding.ASCII.GetBytes(message));
 
                 //Receiving data
-                var endpoint = new Sys.Network.IPv4.EndPoint(Address.Zero, 0);
+                var endpoint = new EndPoint(LocalIP, 0);
                 var data = xClient.Receive(ref endpoint);
                 var data2 = xClient.NonBlockingReceive(ref endpoint);
 
@@ -165,7 +167,7 @@ namespace grapeFruitOSCSharp
             Address destination;
             using (var xClient = new DnsClient())
             {
-                Logger.Debug("Attempting to connect to OpenDNS (208.67.222.222");
+                Logger.Debug("Attempting to connect to OpenDNS (208.67.222.222)");
                 xClient.Connect(new Address(208, 67, 222, 222)); //DNS Server address
 
                 /** Send DNS ask for a single domain name **/

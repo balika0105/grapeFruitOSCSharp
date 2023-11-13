@@ -14,7 +14,7 @@ namespace grapeFruitOSCSharp
 {
     public class Globals
     {
-        public const string build = "0.0.51 CosmosRolling";
+        public const string build = "0.6 CosmosRolling";
         public const string osname = "GrapeFruitOS-Cosmos";
         public const bool devBuild = true;
 
@@ -31,6 +31,8 @@ namespace grapeFruitOSCSharp
         public static string currentuser;
         public static string hostname;
         public static string workingdir;
+        public static string oldpwd;
+
         public static bool swapYZ;
 
         public static byte[] fontData = Convert.FromBase64String("NgQDEAAAAAAAZjxmZmY8ZgAAAAAAABgYGBgYAAAYGBgYGAAAAABsbAAAAAAAAAAAAAAAAAAAAHyCmqKiopqCfAAAAAAAAAB8grqqsqqqgnwAAAAAAHwAAAAAAAAAAAAAAAAAAAAcJgwGJhwAAAAAAAAAAAAAAAAAAAAYPDwYAAAAAAAAAAwYMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgYMAAAGDgYGBg8AAAAAAAAAAAAAGCQIBKWbBgwcNSUHgQEADAYAHzGxsb+xsbGxgAAAAAYMAB8xsbG/sbGxsYAAAAAOGwAfMbGxv7GxsbGAAAAADJMAHzGxsb+xsbGxgAAAAAwGAB+wMDA+MDAwH4AAAAAOGwAfsDAwPjAwMB+AAAAAGxsAH7AwMD4wMDAfgAAAAAwGAB+GBgYGBgYGH4AAAAAAAB+1tbWdhYWFhYWAAAAAAA8ZmAwPGZmZmY8DAZmPAAMGAB+GBgYGBgYGH4AAAAAOGwAfhgYGBgYGBh+AAAAAGZmAH4YGBgYGBgYfgAAAAAAAHxmZmb2ZmZmZnwAAAAAMBgAfMbGxsbGxsZ8AAAAABgwAHzGxsbGxsbGfAAAAAA4bAB8xsbGxsbGxnwAAAAAMkwAfMbGxsbGxsZ8AAAAAAAAAAAAxmw4OGzGAAAAAAAAAnzGzs7W1ubmxnyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGBgYGBgYGAAYGAAAAAAAZmZmZgAAAAAAAAAAAAAAAABsbP5sbGxs/mxsAAAAAAAQftDQ0HwWFhYW/BAAAAAAAAZmbAwYGDA2ZmAAAAAAAAA4bGxsOHDazMx6AAAAAAAYGBgYAAAAAAAAAAAAAAAADhgwMGBgYGBgYDAwGA4AAHAYDAwGBgYGBgYMDBhwAAAAAABmPBj/" +

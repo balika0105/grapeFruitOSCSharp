@@ -1,6 +1,12 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2023-11-13
+- Added `cp` and `mv` commands
+    - Added `whatis` and `help` entry
+- Shell finally supports input with quotation marks (`"`)
+- Changed version number to 0.6
+
 ### 2023-09-22
 - Removed PrismAPI due to not being able to use it *(lots of error messages, unsafe code etc.)*
 - Only pushing code changes to make it visible to public to help fix issues

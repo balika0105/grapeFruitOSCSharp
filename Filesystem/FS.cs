@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Cosmos.HAL.BlockDevice;
 
@@ -27,6 +28,7 @@ namespace grapeFruitOSCSharp.Filesystem
             }
             
         }
+        
         public static void List(string path = "")
         {
             if (Globals.vFS == null)
@@ -40,27 +42,39 @@ namespace grapeFruitOSCSharp.Filesystem
                 if (path != "" && !path.Contains(@":\"))
                     path = Globals.workingdir + path;
 
-                string[] filePaths = Directory.GetFiles(path);
-                Console.WriteLine("\nDirectory listing of {0}", path);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                foreach (var d in Directory.GetDirectories(path))
+                if (Directory.Exists(path))
                 {
-                    var dir = new DirectoryInfo(d);
-                    var dirName = dir.Name;
+                    string[] filePaths = Directory.GetFiles(path);
+                    Console.WriteLine("\nDirectory listing of {0}", path);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    foreach (var d in Directory.GetDirectories(path))
+                    {
+                        var dir = new DirectoryInfo(d);
+                        var dirName = dir.Name;
 
-                    if (dirName.Contains(' '))
-                        Console.Write("\"" + dirName + "\"" + " ");
-                    else
-                        Console.Write(dirName + " ");
+                        if (dirName.Contains(' '))
+                            Console.Write("\"" + dirName + "\"" + " ");
+                        else
+                            Console.Write(dirName + " ");
+                    }
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    for (int i = 0; i < filePaths.Length; ++i)
+                    {
+                        string path_ = filePaths[i];
+                        Console.Write(Path.GetFileName(path_) + " ");
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("\nTotal: " + $"{Globals.drive.TotalSize}" + " b / Free: " + $"{Globals.drive.AvailableFreeSpace}" + " b\n");
                 }
-                Console.ForegroundColor = ConsoleColor.Blue;
-                for (int i = 0; i < filePaths.Length; ++i)
+                else
                 {
-                    string path_ = filePaths[i];
-                    Console.Write(Path.GetFileName(path_) + " ");
+                    Console.Write("Directory ");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\"{0}\"", path);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" not found!");
                 }
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("\nTotal: " + $"{Globals.drive.TotalSize}" + " b / Free: " + $"{Globals.drive.AvailableFreeSpace}" + " b\n");
+                
             }
         }
 
@@ -195,6 +209,77 @@ namespace grapeFruitOSCSharp.Filesystem
                     File.Delete(path);
                 else
                     Console.WriteLine("FS.Remove: File does not exist");
+            }
+        }
+
+        public static void Copy(string source, string target)
+        {
+            if(Globals.vFS == null) 
+            {
+                Console.WriteLine("FS.Copy: Virtual Filesystem is not initialised!");
+            }
+            else
+            {
+                if (!source.Contains(@":\"))
+                    source = Globals.workingdir + source;
+
+                if (!target.Contains(@":\"))
+                    target = Globals.workingdir + target;
+
+                if (File.Exists(source))
+                {
+                    //It seems like File.Copy is "native code", so we have to do it by hand
+                    //File.Copy(source, target);
+                    try
+                    {
+                        byte[] sourceFileContent = File.ReadAllBytes(source);
+                        File.Create(target).Close();
+                        File.WriteAllBytes(target, sourceFileContent);
+                    }
+                    catch(Exception e)
+                    {
+                        ErrorScreen.SpecifiedError(e);
+                    }
+                }
+                else
+                    Console.WriteLine("FS.Copy: Source file does not exist");
+            }
+        }
+
+        public static void Move(string source, string target)
+        {
+            if (Globals.vFS == null)
+            {
+                Console.WriteLine("FS.Move: Virtual Filesystem is not initialised!");
+            }
+            else
+            {
+                if (!source.Contains(@":\"))
+                    source = Globals.workingdir + source;
+
+                if (!target.Contains(@":\"))
+                    target = Globals.workingdir + target;
+
+                if (File.Exists(source))
+                {
+                    //It seems like File.Move is "native code", so we have to do it by hand
+                    //File.Move(source, target);
+                    try
+                    {
+                        byte[] sourceFileContent = File.ReadAllBytes(source);
+                        File.Create(target).Close();
+                        File.WriteAllBytes(target, sourceFileContent);
+                        File.Delete(source);
+
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorScreen.SpecifiedError(e);
+                    }
+                }
+                    
+                else
+                    Console.WriteLine("FS.Move: Source file does not exist");
             }
         }
     }

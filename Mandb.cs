@@ -78,6 +78,18 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("If there are \\-s included, it will create a new directory at the path");
                     break;
 
+                case "copy":
+                case "cp":
+                    Console.WriteLine("Usage: copy/cp <source> <target>");
+                    Console.WriteLine("Copies a file to the specified target");
+                    break;
+
+                case "move":
+                case "mv":
+                    Console.WriteLine("Usage: move/mv <source> <target>");
+                    Console.WriteLine("Moves a file to the specified target");
+                    break;
+
                 case "gfdisk":
                     Console.WriteLine("Usage: gfdisk");
                     Console.WriteLine("Launches GrapeFruit Disk Utility");
