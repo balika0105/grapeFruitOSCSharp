@@ -122,12 +122,6 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("Prompts user to set keyboard layout from displayed list");
                     break;
 
-                case "http":
-                    Console.WriteLine("EXPERIMENTAL COMMAND!");
-                    Console.WriteLine("Usage: http <domain name>");
-                    Console.WriteLine("Attempting to send an HTTP request header to the server of the domain (Port 80)");
-                    break;
-
                 case "resolvedns":
                     Console.WriteLine("Usage: resolvedns <domain name>");
                     Console.WriteLine("Resolve IPv4 address of domain manually (could be useful)");

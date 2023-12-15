@@ -2,14 +2,10 @@
 
 using System.Text;
 
-
-using Sys = Cosmos.System;
-
 using Cosmos.System.Network.IPv4.UDP.DHCP;
 using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.IPv4.TCP;
 
 namespace grapeFruitOSCSharp
 {
@@ -127,37 +123,6 @@ namespace grapeFruitOSCSharp
                 #endregion
                 Console.WriteLine(address + " resolved to " + destination.ToString());
                 Ping(destination);
-            }
-        }
-
-        public static void Http(string url)
-        {
-            if (Globals.nic == null)
-            {
-                Console.WriteLine("GrapeFruitNW.http: Network device is not initialised");
-            }
-            else
-            {
-                
-                //Resolving domain to IPv4
-                Address destination = Dnsresolve(url);
-                using var xClient = new TcpClient(destination, 80);
-                //xClient.Connect(destination, 80);
-
-                //Sending a HTTP request
-                string message = "POST / HTTP/1.1\nHost: localhost:80\nUser-Agent: httpCommand/0.1 (GrapeFruit)\nAccept: text/html\nAccept-Language: en-US,en;q=0.5\nConnection: keep-alive";
-                xClient.Send(Encoding.ASCII.GetBytes(message));
-
-                //Receiving data
-                var endpoint = new EndPoint(LocalIP, 0);
-                var data = xClient.Receive(ref endpoint);
-                var data2 = xClient.NonBlockingReceive(ref endpoint);
-
-                Console.WriteLine("Received data as follows: ");
-                foreach (byte item in data2)
-                {
-                    Console.Write(item);
-                }
             }
         }
 

@@ -171,10 +171,6 @@ namespace grapeFruitOSCSharp
                     GrapeFruitNW.DHCPDiscovery();
                     break;
 
-                case "http":
-                    GrapeFruitNW.Http(splitinput[1]);
-                    break;
-
                 case "resolvedns":
                     if(splitinput.Count > 1)
                         GrapeFruitNW.Resolvedns(splitinput[1]);
@@ -249,7 +245,6 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("ping <address> - pings IPv4 address");
                     Console.WriteLine("dnsping <domain name> - pings domain");
                     Console.WriteLine("trydhcp - attempt to set dhcp with discover");
-                    Console.WriteLine("http <server address> - send http request to specified server (experimental)");
                     Console.WriteLine("resolvedns <domain name> - resolve domain to IPv4 manually");
                     break;
 
