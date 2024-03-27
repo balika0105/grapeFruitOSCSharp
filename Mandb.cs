@@ -142,6 +142,11 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("Launches Desktop Mode (IN DEVELOPMENT!)");
                     break;
 
+                case "keytest":
+                    Console.WriteLine("Usage: keytest");
+                    Console.WriteLine("Launches keycode testing program");
+                    break;
+
                 default:
                     Console.WriteLine("Nothing appropriate");
                     break;

@@ -189,6 +189,10 @@ namespace grapeFruitOSCSharp
                     KBManager.AskForLayout();
                     break;
 
+                case "keytest":
+                    KeycodeTest.Main();
+                    break;
+
                 case "nano":
                     if (splitinput.Count > 1)
                         nano.Nanomain.Main(splitinput[1]);
@@ -224,6 +228,7 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("\nAvailable categories:");
                     Console.WriteLine("\t- system");
                     Console.WriteLine("\t- network");
+                    Console.WriteLine("\t- debug");
                     Console.WriteLine("\t- fs (as in filesystem)");
                     break;
 
@@ -233,7 +238,6 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("echo <message> - prints to screen");
                     Console.WriteLine("clear - clears screen");
                     Console.WriteLine("time - shows current time (RTC)");
-                    Console.WriteLine("throwex - throws test exception");
                     Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
                     Console.WriteLine("shutdown - turns off computer (asks for confirmation)");
                     Console.WriteLine("reboot - reboots computer (asks for confirmation)");
@@ -259,6 +263,11 @@ namespace grapeFruitOSCSharp
                     Console.WriteLine("move/mv <source> <target> - moves file from source to target (if source exists)");
                     Console.WriteLine("gfdisk - disk utility");
                     Console.WriteLine("nano <filename> - text editor");
+                    break;
+
+                case "debug":
+                    Console.WriteLine("throwex - throws test exception");
+                    Console.WriteLine("keytest - test keyboard keycodes");
                     break;
             }
             

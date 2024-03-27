@@ -3,7 +3,7 @@
 namespace Cosmos.System.ScanMaps
 {
     /// <summary>
-    /// Represents the standard German (DE) keyboard layout.
+    /// Homebrew Hungarian Keyboard Implementation
     /// </summary>
     public class HUStandardLayout : ScanMapBase
     {
@@ -31,7 +31,7 @@ namespace Cosmos.System.ScanMaps
 
             Keys.Add(new GrapeFruit_CosmosRolling.CustomKeyMapping(0x01, '0', '§', '0', '0', ConsoleKeyEx.D0));
 
-            //Keys.Add(new KeyMapping(0x01, '0', '§', '0', '0', '0', '0', ConsoleKeyEx.D0));
+            Keys.Add(new KeyMapping(0x01, '0', '§', '0', '0', '0', '0', ConsoleKeyEx.D0));
             Keys.Add(new KeyMapping(0x02, '1', '\'', '1', '1', '1', '1', ConsoleKeyEx.D1));
             Keys.Add(new KeyMapping(0x03, '2', '\"', '2', '2', '2', '2', ConsoleKeyEx.D2));
             Keys.Add(new KeyMapping(0x04, '3', '+', '3', '^', '+', '3', '³', ConsoleKeyEx.D3));
@@ -82,7 +82,7 @@ namespace Cosmos.System.ScanMaps
             /* Left Shift*/
             Keys.Add(new KeyMapping(0x2A, ConsoleKeyEx.LShift));
             /* <yxcvbnm,.-          >YXCVBNM;:_         |______µ___ */
-            Keys.Add(new KeyMapping(0x2B, 'í', 'Í', 'í', 'Í', 'í', 'Í', '|', '|', ConsoleKeyEx.OEM102));
+            Keys.Add(new KeyMapping(0x2B, 'ü', 'Ü', 'ü', 'Ü', 'ü', 'Ü', '|', '|', ConsoleKeyEx.OEM102));
             Keys.Add(new KeyMapping(0x2C, 'y', 'Y', 'y', 'Y', 'y', 'Y', ConsoleKeyEx.Z));
             Keys.Add(new KeyMapping(0x2D, 'x', 'X', 'x', 'X', 'x', 'X', ConsoleKeyEx.X));
             Keys.Add(new KeyMapping(0x2E, 'c', 'C', 'c', 'C', 'c', 'C', ConsoleKeyEx.C));
