@@ -9,10 +9,23 @@ namespace grapeFruitRebuild
 {
     public class Command
     {
+        static string[] splitpwd = { };
         public static void Main() 
         {
+            //Making the prompt pretty
+            splitpwd = Globals.workingdir.Split("\\");
+
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"[{Globals.currentuser}@{Globals.hostname} {Globals.workingdir}]> ");
+            Console.Write($"[{Globals.currentuser}@{Globals.hostname} ");
+
+            //Making the prompt pretty
+            Logger.Debug("splitpwd.Length: " + splitpwd.Length);
+            if (splitpwd.Length == 2)
+                Console.Write($"{Globals.workingdir}]> ");
+            else if (splitpwd.Length > 2)
+                Console.Write($"{splitpwd[splitpwd.Length - 2]}]> ");
+
+
             Console.ForegroundColor = ConsoleColor.White;
             string command = Console.ReadLine();
             ParseInput(command);

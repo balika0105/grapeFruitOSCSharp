@@ -3,6 +3,7 @@ using Cosmos.System.ExtendedASCII;
 using Cosmos.System.FileSystem;
 using Cosmos.System.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Sys = Cosmos.System;
@@ -30,19 +31,72 @@ namespace grapeFruitRebuild
             Globals.vFS = null;
             Globals.drive = null;
             Globals.workingdir = "";
-            Logger.Log(1, "Filesystem init");
-            try
+        fs_sw_loopback:
+            Console.Write("Load Filesystem drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
             {
-                Globals.vFS = new CosmosVFS();
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
-                Globals.drive = new DriveInfo("0");
-                Globals.workingdir = @"0:\";
-                Logger.Log(1, "FS Init ok");
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Console.WriteLine();
+                    Logger.Log(1, "Filesystem init");
+                    try
+                    {
+                        Globals.vFS = new CosmosVFS();
+                        Sys.FileSystem.VFS.VFSManager.RegisterVFS(Globals.vFS);
+                        Globals.drive = new DriveInfo("0");
+                        Globals.workingdir = @"0:\";
+                        Logger.Log(1, "FS Init ok");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorScreen.SpecifiedError(ex);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+                default:
+                    Console.WriteLine();
+                    goto fs_sw_loopback;
             }
-            catch (Exception ex)
+
+            #endregion
+
+            #region Network Init
+            Globals.nic = null;
+        nw_init_loopback:
+            Console.Write("Load Network drivers?\n1 = Yes // 2 = No > ");
+            switch (Console.ReadKey().Key)
             {
-                ErrorScreen.SpecifiedError(ex);
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    try
+                    {
+                        Console.WriteLine();
+                        Logger.Log(1, "Network init");
+                        Globals.nic = Cosmos.HAL.NetworkDevice.GetDeviceByName("eth0");
+                        if (Globals.nic.Enable())
+                        {
+                            Logger.Log(1, "NIC Init OK, getting setup with DHCP...");
+                            nw.DHCPSetup();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorScreen.SpecifiedError(ex);
+                    }
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Console.WriteLine();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    goto nw_init_loopback;
             }
+
             #endregion
 
             Logger.Log(1, "Set hostname to \"livecd\""); ;

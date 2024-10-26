@@ -2,7 +2,7 @@
 using Cosmos.System;
 using System;
 
-namespace GrapeFruit_CosmosRolling
+namespace grapeFruitRebuild
 {
     /// <summary>
     /// Represents a customised keymapping from physical to virtual, Alt key can be used

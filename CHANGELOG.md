@@ -1,6 +1,12 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2024-10-26
+- Rebuilt solution due to changes in Cosmos Framework
+- Filetree restructuring
+- Added `la` command (experimental, can cause crashes)
+- Bumped version number to 0.10
+
 ### 2023-11-13
 - Added `cp` and `mv` commands
     - Added `whatis` and `help` entry
