@@ -1,21 +1,20 @@
-﻿using Cosmos.System.FileSystem;
-using Cosmos.System.Network.Config;
-using grapeFruitRebuild.Filesystem;
+﻿using Cosmos.System.Network.Config;
 using System;
-//using grapeFruitOSCSharp.Filesystem;
+using grapeFruitOSCSharp.Filesystem;
 using System.Collections.Generic;
 
-namespace grapeFruitRebuild
+namespace grapeFruitOSCSharp
 {
     public class Command
     {
-        public static void Main() 
+        public static void Main()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"[{Globals.currentuser}@{Globals.hostname} {Globals.workingdir}]> ");
             Console.ForegroundColor = ConsoleColor.White;
             string command = Console.ReadLine();
             ParseInput(command);
+
         }
 
         private static void ParseInput(string input)
@@ -52,7 +51,7 @@ namespace grapeFruitRebuild
             Process(arguments);
         }
 
-        private static void Process(List<string> splitinput)
+        static void Process(List<string> splitinput)
         {
             switch (splitinput[0])
             {
@@ -95,13 +94,6 @@ namespace grapeFruitRebuild
                         FS.List(splitinput[1]);
                     else
                         FS.List();
-                    break;
-
-                case "la":
-                    if (splitinput.Count > 1)
-                        FS.VerboseList(splitinput[1]);
-                    else
-                        FS.VerboseList();
                     break;
 
                 case "cd":
@@ -154,11 +146,51 @@ namespace grapeFruitRebuild
                         Console.WriteLine("Not enough parameters");
                     break;
 
+                case "gfdisk":
+                    Gfdisk.Main();
+                    break;
+
+                case "ping":
+                    if (splitinput.Count > 1)
+                        GrapeFruitNW.Ping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "dnsping":
+                    if (splitinput.Count > 1)
+                        GrapeFruitNW.Dnsping(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "trydhcp":
+                    Logger.Debug("Clearing network configurations");
+                    NetworkConfiguration.ClearConfigs();
+                    Logger.Debug("Attempting DHCP Discovery");
+                    GrapeFruitNW.DHCPDiscovery();
+                    break;
+
+                case "resolvedns":
+                    if(splitinput.Count > 1)
+                        GrapeFruitNW.Resolvedns(splitinput[1]);
+                    else
+                        Console.WriteLine("Not enough parameters");
+                    break;
+
                 case "whatis":
                     if (splitinput.Count > 1)
                         Mandb.Man(splitinput[1]);
                     else
                         Console.WriteLine("Not enough parameters");
+                    break;
+
+                case "kblayout":
+                    KBManager.AskForLayout();
+                    break;
+
+                case "keytest":
+                    KeycodeTest.Main();
                     break;
 
                 case "nano":
@@ -176,11 +208,12 @@ namespace grapeFruitRebuild
                     break;
 
                 default:
-                    Console.WriteLine("> unknown command");
+                    Console.WriteLine("gfsh> Unknown command");
                     break;
             }
         }
 
+        //Always add every command here
         static void Commands(string category = "")
         {
             switch (category)
@@ -194,7 +227,7 @@ namespace grapeFruitRebuild
 
                     Console.WriteLine("\nAvailable categories:");
                     Console.WriteLine("\t- system");
-                    //Console.WriteLine("\t- network");
+                    Console.WriteLine("\t- network");
                     Console.WriteLine("\t- debug");
                     Console.WriteLine("\t- fs (as in filesystem)");
                     break;
@@ -205,39 +238,38 @@ namespace grapeFruitRebuild
                     Console.WriteLine("echo <message> - prints to screen");
                     Console.WriteLine("clear - clears screen");
                     Console.WriteLine("time - shows current time (RTC)");
-                    //Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
+                    Console.WriteLine("kblayout - Change keyboard layout (shows dialog)");
                     Console.WriteLine("shutdown - turns off computer (asks for confirmation)");
                     Console.WriteLine("reboot - reboots computer (asks for confirmation)");
                     Console.WriteLine("whatis <command> - information about command");
                     break;
 
-                /*case "network":
+                case "network":
                     Console.WriteLine("Available commands in \"network\" category:\n");
                     Console.WriteLine("ping <address> - pings IPv4 address");
                     Console.WriteLine("dnsping <domain name> - pings domain");
                     Console.WriteLine("trydhcp - attempt to set dhcp with discover");
                     Console.WriteLine("resolvedns <domain name> - resolve domain to IPv4 manually");
-                    break;*/
+                    break;
 
                 case "fs":
                     Console.WriteLine("Available commands in \"fs\" category:\n");
                     Console.WriteLine("ls/dir - list directory contents");
-                    Console.WriteLine("ls - verbose listing of directory contents");
                     Console.WriteLine("rm - remove file");
                     Console.WriteLine("touch <filename> - create empty file with specified name");
                     Console.WriteLine("cat <filename> - print file contents");
                     Console.WriteLine("mkdir/md <name> - creates directory with name");
                     Console.WriteLine("copy/cp <source> <target> - copies file from source to target (if source exists)");
                     Console.WriteLine("move/mv <source> <target> - moves file from source to target (if source exists)");
-                    //Console.WriteLine("gfdisk - disk utility");
+                    Console.WriteLine("gfdisk - disk utility");
                     Console.WriteLine("nano <filename> - text editor");
                     break;
 
                 case "debug":
                     Console.WriteLine("throwex - throws test exception");
-                    //Console.WriteLine("keytest - test keyboard keycodes");
+                    Console.WriteLine("keytest - test keyboard keycodes");
                     break;
-            }
+            } 
         }
 
         static void Echo(List<string> input)
@@ -277,7 +309,7 @@ namespace grapeFruitRebuild
 
         static bool Choice()
         {
-        redochoice:
+            redochoice:
             Console.Write("Are you sure? (Y/n)");
             if (!Globals.swapYZ)
             {
@@ -316,6 +348,5 @@ namespace grapeFruitRebuild
                 }
             }
         }
-
     }
 }

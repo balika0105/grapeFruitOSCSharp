@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>True</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <DebugEnabled>True</DebugEnabled>
+        <CompileVBEMultiboot>True</CompileVBEMultiboot>
+        <TraceMode>All</TraceMode>
+        <VMWareEdition>Player</VMWareEdition>
+        <RemoveBootDebugOutput>False</RemoveBootDebugOutput>
+        <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+        <UseUEFI>False</UseUEFI>
+        <Timeout>3</Timeout>
+        <VBEResolution>800x600x32</VBEResolution>
+        <OptimizationLevel>0</OptimizationLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <Optimize>True</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <Optimize>False</Optimize>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Plugs" Version="0.1.0-localbuild20231213091844" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+    </ItemGroup>
+
+</Project>

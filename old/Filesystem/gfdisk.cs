@@ -12,7 +12,8 @@ namespace grapeFruitOSCSharp.Filesystem
         {
             Console.Clear();
             Console.WriteLine("GFDisk - GrapeFruit Disk Utility v0.1");
-            if (Globals.vFS == null)
+            Console.WriteLine("\nNot yet implemented");
+            /*if (Globals.vFS == null)
             {
                 Console.WriteLine("WARNING! Virtual Filesystem isn't initialised!");
             }
@@ -21,10 +22,11 @@ namespace grapeFruitOSCSharp.Filesystem
             {
                 Console.Write("gfdisk > ");
 
-            } while (Command(Console.ReadLine()));
+            } while (Command(Console.ReadLine()));*/
+            return;
         }
 
-        static bool Command(string command)
+        /*static bool Command(string command)
         {
             switch (command)
             {
@@ -122,12 +124,12 @@ namespace grapeFruitOSCSharp.Filesystem
             {
                 try
                 {
-                    int maxDiskSize = disk.Size;
+                    long maxDiskSize = disk.Size;
                     Console.Write($"\nNew partition size in bytes? ({maxDiskSize}) > ");
-                    int disksize = 0;
+                    long disksize = 0;
                     if(Console.ReadLine() != "")
                     {
-                        disksize = Convert.ToInt32(Console.ReadLine());
+                        disksize = Convert.ToInt64(Console.ReadLine());
                     }
                     else
                     {
@@ -203,6 +205,6 @@ namespace grapeFruitOSCSharp.Filesystem
                         goto redochoice;
                 }
             }
-        }
+        }*/
     }
 }

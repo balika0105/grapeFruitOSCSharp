@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace grapeFruitRebuild
+namespace grapeFruitOSCSharp
 {
     public class UserHandler
     {

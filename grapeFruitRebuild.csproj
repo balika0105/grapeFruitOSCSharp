@@ -17,28 +17,13 @@
         <Profile>VMware</Profile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
-        <DebugEnabled>True</DebugEnabled>
-        <CompileVBEMultiboot>False</CompileVBEMultiboot>
-        <TraceMode>All</TraceMode>
-        <VMWareEdition>Player</VMWareEdition>
-        <RemoveBootDebugOutput>False</RemoveBootDebugOutput>
-        <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <Optimize>True</Optimize>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <Optimize>False</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
-        <PackageReference Include="Cosmos.Plugs" Version="0.1.0-localbuild20231213091844" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
-        <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+        <PackageReference Include="Cosmos.Plugs" Version="0-*" NoWarn="NU1604" />
     </ItemGroup>
 
 </Project>
