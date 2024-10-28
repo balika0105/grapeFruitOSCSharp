@@ -14,7 +14,7 @@ namespace grapeFruitRebuild
 {
     public class Globals
     {
-        public const string build = "0.10 CosmosRolling-Rebuild";
+        public const string build = "0.12 CosmosRolling-Rebuild";
         public const string osname = "grapeFruitOS";
         public const bool devBuild = true;
 

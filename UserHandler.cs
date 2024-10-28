@@ -7,7 +7,7 @@ namespace grapeFruitRebuild
         //This class will have the proper user handling elements in future builds
         public static bool Login()
         {
-            Console.Write("\nUsername for this session: ");
+            Console.Write("\n" + Globals.hostname + " login: ");
             Globals.currentuser = Console.ReadLine();
             return true;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using grapeFruitOSCSharp.Filesystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,8 +9,10 @@ namespace grapeFruitRebuild
     {
         public class Nanomain
         {
-            const string verNum = "0.3";
+            const string verNum = "0.4";
             static string fileName = "";
+            static string displayedFileName = "";
+            static string[] splitFileName = { };
             static int cursorX, cursorY;
 
             static List<string> text;
@@ -18,23 +21,24 @@ namespace grapeFruitRebuild
 
             public static void Main(string file = "")
             {
-                Logger.Debug("Nano launched");
+                //Passing file parameter to internal "fileName" to avoid confusion
+                fileName = file;
                 cursorX = 0;
                 cursorY = 0;
 
                 text = new List<string>();
-                if (file == "")
+                if (fileName == "")
                 {
                     text.Add("");
                 }
                 else
                 {
                     //Checking for file
-                    if (file.Contains(@":\"))
+                    if (fileName.Contains(@":\"))
                     {
                         //Absolute path, don't need pwd from Globals
-                        if (File.Exists(file))
-                            text = LoadFile(file);
+                        if (File.Exists(fileName))
+                            text = LoadFile(fileName);
                         else
                         {
                             //File does not exist, we'll create it later
@@ -43,10 +47,10 @@ namespace grapeFruitRebuild
                     }
                     else
                     {
-                        file = Globals.workingdir + file;
+                        fileName = Globals.workingdir + fileName;
                         //Relative path
-                        if (File.Exists(file))
-                            text = LoadFile(file);
+                        if (File.Exists(fileName))
+                            text = LoadFile(fileName);
                         else
                         {
                             //File does not exist, we'll create it later
@@ -55,13 +59,22 @@ namespace grapeFruitRebuild
                     }
                 }
 
-                fileName = file;
-
-
-
-
                 while (true)
                 {
+                    if (fileName != "")
+                    {
+                        if (fileName.Length <= 25)
+                            displayedFileName = fileName;
+                        else
+                        {
+                            splitFileName = fileName.Split('\\');
+                            displayedFileName = splitFileName[splitFileName.Length - 1];
+                        }
+                    }
+                    else
+                        displayedFileName = "<unnamed>";
+
+
                     Render(text, cursorX, cursorY, saveFileFooter);
                     if (saveFileFooter)
                     {
@@ -79,9 +92,10 @@ namespace grapeFruitRebuild
                     if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.O)
                     {
                         // Save the file
-                        SaveFile(text, file);
+                        SaveFile2(text, fileName);
                     }
 
+                    #region Input logic
                     switch (key.Key)
                     {
                         case ConsoleKey.Enter:
@@ -182,6 +196,7 @@ namespace grapeFruitRebuild
                             }
                             break;
                     }
+                    #endregion
                 }
             }
 
@@ -194,7 +209,7 @@ namespace grapeFruitRebuild
                 Console.SetCursorPosition(0, 0);
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write("GrapeFruit Nano " + verNum + " | Editing: " + fileName);
+                Console.Write("GrapeFruit Nano " + verNum + " | Editing: " + displayedFileName);
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
 
@@ -229,105 +244,57 @@ namespace grapeFruitRebuild
                 Console.SetCursorPosition(cursorX, cursorY + 1);
             }
 
-            static void SaveFile(List<string> text, string filepath)
+            static void SaveFile2(List<string> text, string filePathParam)
             {
-                if (filepath == "")
-                {
-                    Console.Clear();
-                    Console.Write("Enter file name: ");
-                    string fileName = Console.ReadLine();
-                    if (File.Exists(fileName))
-                    {
-                        Logger.Debug("save file as " + fileName);
-                        StreamWriter writer = new(fileName);
-                        foreach (string line in text)
-                        {
-                            writer.WriteLine(line);
-                        }
-                        writer.Close();
-                        saveFileFooter = true;
-                    }
-                    else
-                    {
-                        Logger.Debug("create & save file as " + fileName);
+                //Trying to make the code a bit cleaner
 
-                        File.Create(fileName).Close();
-                        StreamWriter writer = new(fileName);
-                        foreach (string line in text)
-                        {
-                            writer.WriteLine(line);
-                        }
-                        writer.Close();
-                        saveFileFooter = true;
+                //Check if filePathParam is empty
+                if(filePathParam == "")
+                {
+                    //Nicer save dialog
+                    Console.SetCursorPosition(0, 24);
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write("                                      ");
+                    Console.SetCursorPosition(0, 24);
+                    Console.Write("Enter file name: ");
+                    fileName = Console.ReadLine();
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    if (!fileName.Contains(@":\"))
+                    {
+                        fileName = Globals.workingdir + fileName;
                     }
                 }
                 else
                 {
-                    try
-                    {
-                        if (File.Exists(filepath))
-                        {
-                            Logger.Debug("save file as " + filepath);
-                            StreamWriter writer = new(filepath);
-                            foreach (string line in text)
-                            {
-                                writer.WriteLine(line);
-                            }
-                            writer.Close();
-                            saveFileFooter = true;
-                        }
-                        else
-                        {
-                            Logger.Debug("create & save file as " + filepath);
-
-                            File.Create(filepath).Close();
-                            StreamWriter writer = new(filepath);
-                            foreach (string line in text)
-                            {
-                                writer.WriteLine(line);
-                            }
-                            writer.Close();
-                            saveFileFooter = true;
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Console.Clear();
-                        Console.Write("Enter file name: ");
-                        string fileName = Console.ReadLine();
-                        if (File.Exists(fileName))
-                        {
-                            Logger.Debug("save file as " + fileName);
-                            StreamWriter writer = new(fileName);
-                            foreach (string line in text)
-                            {
-                                writer.WriteLine(line);
-                            }
-                            writer.Close();
-                            saveFileFooter = true;
-                        }
-                        else
-                        {
-                            Logger.Debug("create & save file as " + fileName);
-
-                            File.Create(fileName).Close();
-                            StreamWriter writer = new(fileName);
-                            foreach (string line in text)
-                            {
-                                writer.WriteLine(line);
-                            }
-                            writer.Close();
-                            saveFileFooter = true;
-                        }
-                    }
+                    fileName = filePathParam;
                 }
 
+                //Output filename is now set, check if it exists
+                if(!File.Exists(fileName))
+                {
+                    //If the file does not exist, create it and add a null term so the system doesn't crash
+                    FS.Touch(fileName);
+                }
+
+                //File path set, file created/already exists, write content
+                StreamWriter writer = new(fileName);
+                foreach (string line in text)
+                {
+                    writer.WriteLine(line);
+                }
+                writer.Close();
+
+                splitFileName = fileName.Split('\\');
+                displayedFileName = splitFileName[splitFileName.Length - 1];
+
+                saveFileFooter = true;
             }
 
             static List<string> LoadFile(string path)
             {
-                Logger.Debug("LoadFile");
-                Logger.Debug($"Path: {path}");
                 List<string> temp = new();
                 string[] fileContent = File.ReadAllLines(path);
 

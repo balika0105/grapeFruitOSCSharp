@@ -14,7 +14,7 @@ namespace grapeFruitRebuild
     {
         protected override void BeforeRun()
         {
-            Logger.Debug("grapeFruit OS Code starts here");
+            Sys.Global.Debugger.Send("--- " + Globals.osname + " " + Globals.build + " ---");
 
             Console.WriteLine();
 

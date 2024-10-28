@@ -1,6 +1,10 @@
 ﻿# GrapeFruit OS - Powered by Cosmos
 ## Changelog
 
+### 2024-10-28
+- `nano` rework
+- Removed many `Logger.Debug` entries
+
 ### 2024-10-26
 - Rebuilt solution due to changes in Cosmos Framework
 - Filetree restructuring

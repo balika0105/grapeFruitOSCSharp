@@ -19,7 +19,6 @@ namespace grapeFruitRebuild
             Console.Write($"[{Globals.currentuser}@{Globals.hostname} ");
 
             //Making the prompt pretty
-            Logger.Debug("splitpwd.Length: " + splitpwd.Length);
             if (splitpwd.Length == 2)
                 Console.Write($"{Globals.workingdir}]> ");
             else if (splitpwd.Length > 2)
@@ -235,7 +234,7 @@ namespace grapeFruitRebuild
                 case "fs":
                     Console.WriteLine("Available commands in \"fs\" category:\n");
                     Console.WriteLine("ls/dir - list directory contents");
-                    Console.WriteLine("ls - verbose listing of directory contents");
+                    Console.WriteLine("la - verbose listing of directory contents");
                     Console.WriteLine("rm - remove file");
                     Console.WriteLine("touch <filename> - create empty file with specified name");
                     Console.WriteLine("cat <filename> - print file contents");

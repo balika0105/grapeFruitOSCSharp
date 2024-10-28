@@ -82,10 +82,12 @@ namespace grapeFruitRebuild.Filesystem
 
             if(Globals.vFS != null) 
             {
-                path = path == "" ? Globals.workingdir : path;
+                if(path == "")
+                    path = Globals.workingdir;
 
-                if (path != "" && !path.Contains(@":\"))
+                if (!path.Contains(@":\"))
                     path = Globals.workingdir + path;
+
 
                 if (Directory.Exists(path))
                 {
@@ -155,7 +157,6 @@ namespace grapeFruitRebuild.Filesystem
                 if (!filename.Contains(@":\"))
                     filename = Globals.workingdir + filename;
 
-                Logger.Debug("Filename: " + filename);
                 try
                 {
                     if (!File.Exists(filename))
@@ -188,7 +189,6 @@ namespace grapeFruitRebuild.Filesystem
                 if (!path.Contains(@":\"))
                     path = Globals.workingdir + path;
 
-                Logger.Debug($"{path}");
                 try
                 {
                     string[] fileContent = File.ReadAllLines(path);
@@ -230,8 +230,6 @@ namespace grapeFruitRebuild.Filesystem
                 if (path == "..")
                 {
                     string[] splitpath = Globals.workingdir.Split(@"\");
-                    foreach (string s in splitpath)
-                        Logger.Debug($"{s}");
 
                     //We can't do this:
                     //splitpath = splitpath.SkipLast(1).ToArray();
@@ -245,8 +243,6 @@ namespace grapeFruitRebuild.Filesystem
                         Globals.workingdir += temp[i] + "\\";
 
                     //Very "hack-like" solution but it's almost 12am, I'll fix it later
-
-                    Logger.Debug("new pwd: " + Globals.workingdir);
                 }
                 else if (!path.Contains(@":\"))
                 {
