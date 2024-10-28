@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace grapeFruitRebuild
+namespace grapeFruitOSCSharp
 {
     public class Mandb
     {
@@ -51,11 +51,6 @@ namespace grapeFruitRebuild
                     Console.WriteLine("Lists contents of current working directory or the contents of the specified path");
                     break;
 
-                case "la":
-                    Console.WriteLine("Usage: la <or> la <path>");
-                    Console.WriteLine("Outputs a verbose listing of the current working directory or of the specified path");
-                    break;
-
                 case "cd":
                     Console.WriteLine("Usage: cd <path>");
                     Console.WriteLine("Changes directory to specified path");
@@ -95,42 +90,42 @@ namespace grapeFruitRebuild
                     Console.WriteLine("Moves a file to the specified target");
                     break;
 
-                //case "gfdisk":
-                //    Console.WriteLine("Usage: gfdisk");
-                //    Console.WriteLine("Launches GrapeFruit Disk Utility");
-                //    break;
+                case "gfdisk":
+                    Console.WriteLine("Usage: gfdisk");
+                    Console.WriteLine("Launches GrapeFruit Disk Utility");
+                    break;
 
-                //case "ping":
-                //    Console.WriteLine("Usage: ping <IPv4 address>");
-                //    Console.WriteLine("Example: ping 1.1.1.1");
-                //    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
-                //    break;
+                case "ping":
+                    Console.WriteLine("Usage: ping <IPv4 address>");
+                    Console.WriteLine("Example: ping 1.1.1.1");
+                    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
+                    break;
 
-                //case "dnsping":
-                //    Console.WriteLine("Usage: dnsping <Domain name>");
-                //    Console.WriteLine("Example: dnsping archlinux.org");
-                //    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
-                //    break;
+                case "dnsping":
+                    Console.WriteLine("Usage: dnsping <Domain name>");
+                    Console.WriteLine("Example: dnsping archlinux.org");
+                    Console.WriteLine("Sends 4 ICMP echo requests to the specified address");
+                    break;
 
-                //case "trydhcp":
-                //    Console.WriteLine("Usage: trydhcp");
-                //    Console.WriteLine("Attempts to reset DHCP configuration, or set it, if previously unsuccesful");
-                //    break;
+                case "trydhcp":
+                    Console.WriteLine("Usage: trydhcp");
+                    Console.WriteLine("Attempts to reset DHCP configuration, or set it, if previously unsuccesful");
+                    break;
 
                 case "whatis":
                     Console.WriteLine("Usage: whatis <command>");
                     Console.WriteLine("Information about command specified");
                     break;
 
-                //case "kblayout":
-                //    Console.WriteLine("Usage: kblayout");
-                //    Console.WriteLine("Prompts user to set keyboard layout from displayed list");
-                //    break;
+                case "kblayout":
+                    Console.WriteLine("Usage: kblayout");
+                    Console.WriteLine("Prompts user to set keyboard layout from displayed list");
+                    break;
 
-                //case "resolvedns":
-                //    Console.WriteLine("Usage: resolvedns <domain name>");
-                //    Console.WriteLine("Resolve IPv4 address of domain manually (could be useful)");
-                //    break;
+                case "resolvedns":
+                    Console.WriteLine("Usage: resolvedns <domain name>");
+                    Console.WriteLine("Resolve IPv4 address of domain manually (could be useful)");
+                    break;
 
                 case "nano":
                     Console.WriteLine("Usage: nano // nano <file path>");
@@ -142,15 +137,15 @@ namespace grapeFruitRebuild
                     Console.WriteLine("Removes file");
                     break;
 
-                //case "desktop":
-                //    Console.WriteLine("Usage: desktop");
-                //    Console.WriteLine("Launches Desktop Mode (IN DEVELOPMENT!)");
-                //    break;
+                case "desktop":
+                    Console.WriteLine("Usage: desktop");
+                    Console.WriteLine("Launches Desktop Mode (IN DEVELOPMENT!)");
+                    break;
 
-                //case "keytest":
-                //    Console.WriteLine("Usage: keytest");
-                //    Console.WriteLine("Launches keycode testing program");
-                //    break;
+                case "keytest":
+                    Console.WriteLine("Usage: keytest");
+                    Console.WriteLine("Launches keycode testing program");
+                    break;
 
                 default:
                     Console.WriteLine("Nothing appropriate");

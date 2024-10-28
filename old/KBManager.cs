@@ -14,7 +14,8 @@ namespace grapeFruitOSCSharp
                     Globals.swapYZ = false;
                     return true;
                 case "huhu":
-                    Cosmos.System.KeyboardManager.SetKeyLayout(new HUStandardLayout());
+                    //Cosmos.System.KeyboardManager.SetKeyLayout(new HUStandardLayout());
+                    Cosmos.System.KeyboardManager.SetKeyLayout(new HUNewLayout());
                     Globals.swapYZ = true;
                     return true;
                 case "dede":

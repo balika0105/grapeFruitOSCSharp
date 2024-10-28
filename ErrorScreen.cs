@@ -1,81 +1,34 @@
 ﻿using System;
 
-
-namespace grapeFruitOSCSharp
+namespace grapeFruitRebuild
 {
     public class ErrorScreen
     {
-        //Disables "unreachable code" while we're running the devbuild
-#pragma warning disable CS0162
+        //This is for when an exception happens that can be caught
+        //Real bugchecks are handled by Cosmos, those cannot be overwritten
         public static void GeneralError()
         {
-            if (!Globals.devBuild)
-            {
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Clear();
-                Console.WriteLine(" -------\n| x   x |\n|   -   |\n -------\n");
-                Console.WriteLine("A general fatal error occured in the system");
-                Console.WriteLine("If the problem persists, please contact the devs");
-
-                Console.Write("\n\nPress a key to reboot!");
-                Console.ReadKey();
-                Cosmos.System.Power.Reboot();
-            }
-            else
-            {
-                Logger.Log(3, "General System Exception");
-            }
-
+            Logger.Log(4, "General Critical Failure. \nSystem integrity might be compromised. Press a key to continue");
+            Console.ReadKey();
         }
 
         public static void SpecifiedError(Exception e)
         {
-            if (!Globals.devBuild)
-            {
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Clear();
-                Console.WriteLine(" -------\n| x   x |\n|   -   |\n -------\n");
-                Console.WriteLine("A fatal error occured");
-                if (e.Message != "")
-                    Console.WriteLine("\nError information:\n" + e.Message);
-                else
-                    Console.WriteLine("Couldn't get error message");
+            Logger.Log(4, "Critical failure");
+            Console.WriteLine("A critical error occured");
+            Console.WriteLine("\nException message: " + e.Message);
+            Console.WriteLine("Exception ToString: " + e.ToString());
+            Console.WriteLine("\nSystem integrity might be compromised. Press a key to continue");
 
-                Console.WriteLine("If the problem persists, please contact the devs");
+            Logger.Debug("Exception message: " + e.Message + "\nException ToString: " + e.ToString());
 
-                Console.Write("\n\nPress a key to reboot!");
-                Console.ReadKey();
-                Cosmos.System.Power.Reboot();
-            }
-            else
-            {
-                Logger.Log(3, "System Exception | Exception: " + e.ToString()+ "\n\tMessage: " + e.Message);
-            }
-
+            Console.ReadKey();
         }
 
         public static void CustomError(string errormessage)
         {
-            if (!Globals.devBuild)
-            {
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Clear();
-                Console.WriteLine(" -------\n| x   x |\n|   -   |\n -------\n");
-                Console.WriteLine("A fatal error occured and the system had to be halted");
-                Console.WriteLine("\nError information:\n" + errormessage);
-                Console.WriteLine("If the problem persists, please contact the devs");
-
-                Console.Write("\n\nPress a key to reboot!");
-                Console.ReadKey();
-                Cosmos.System.Power.Reboot();
-            }
-            else
-            {
-                Logger.Log(3, "System Exception | Message: " + errormessage);
-            }
+            Logger.Log(4, errormessage + "\nSystem integrity might be compromised. Press a key to continue");
+            Console.ReadKey();
         }
     }
 }
